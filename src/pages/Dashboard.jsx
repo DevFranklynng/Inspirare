@@ -13,7 +13,7 @@ import Card from "../components/ui/Card";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-  const { profile, isInstructor } = useAuth();
+  const { profile, isInstructor, isAdmin } = useAuth();
   const [data, setData] = useState(null);
   const [status, setStatus] = useState("loading"); // loading | success | error
   const [error, setError] = useState(null);
@@ -45,13 +45,29 @@ export default function Dashboard() {
       <WelcomeCard
         name={firstName}
         subtitle={
-          isInstructor
+          isAdmin
+            ? "Here's the current state of the platform."
+            : isInstructor
             ? "Here's how your courses are doing."
             : "Here's where your courses and assignments stand."
         }
       />
 
-      {isInstructor ? (
+      {isAdmin ? (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            { label: "Students", value: data.total_students },
+            { label: "Instructors", value: data.total_instructors },
+            { label: "Courses", value: data.total_courses },
+            { label: "Enrollments", value: data.total_enrollments },
+          ].map((stat) => (
+            <Card key={stat.label} className="flex flex-col gap-1">
+              <p className="text-2xl font-bold text-slate-900">{stat.value ?? 0}</p>
+              <p className="text-xs text-slate-400">{stat.label}</p>
+            </Card>
+          ))}
+        </div>
+      ) : isInstructor ? (
         <>
           <InstructorSummary data={data} />
           <Card>
