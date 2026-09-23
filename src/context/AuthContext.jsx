@@ -1,107 +1,39 @@
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
-import * as authApi from "../api/auth";
-import { clearSession, getAccessToken, registerUnauthorizedHandler } from "../api/client";
+import { useEffect } from "react";
+import { useAuthStore } from "../stores/authStore";
 
-const AuthContext = createContext(null);
-
+// Thin compatibility layer: the actual state lives in the Zustand store
+// (src/stores/authStore.js). This just triggers the one-time session
+// restore on boot and re-exports `useAuth` with the same shape every
+// existing component already expects, so nothing else had to change.
 export function AuthProvider({ children }) {
-  // "loading" = restoring session on boot, before we know if the user is
-  // authenticated at all. Distinct from per-action loading states below.
-  const [profile, setProfile] = useState(null);
-  const [status, setStatus] = useState("loading"); // loading | authenticated | unauthenticated
-  const [error, setError] = useState(null);
-
-  const handleUnauthorized = useCallback(() => {
-    clearSession();
-    setProfile(null);
-    setStatus("unauthenticated");
-  }, []);
+  const restoreSession = useAuthStore((s) => s.restoreSession);
 
   useEffect(() => {
-    registerUnauthorizedHandler(handleUnauthorized);
-  }, [handleUnauthorized]);
+    restoreSession();
+  }, [restoreSession]);
 
-  // Restore session on load: if a token is stored, validate it against
-  // /auth/me rather than trusting it blindly.
-  useEffect(() => {
-    let ignore = false;
+  return children;
+}
 
-    async function restore() {
-      const token = getAccessToken();
-      if (!token) {
-        if (!ignore) setStatus("unauthenticated");
-        return;
-      }
-      try {
-        const me = await authApi.fetchMe();
-        if (!ignore) {
-          setProfile(me);
-          setStatus("authenticated");
-        }
-      } catch {
-        if (!ignore) {
-          clearSession();
-          setProfile(null);
-          setStatus("unauthenticated");
-        }
-      }
-    }
+export function useAuth() {
+  const profile = useAuthStore((s) => s.profile);
+  const status = useAuthStore((s) => s.status);
+  const error = useAuthStore((s) => s.error);
+  const login = useAuthStore((s) => s.login);
+  const register = useAuthStore((s) => s.register);
+  const logout = useAuthStore((s) => s.logout);
+  const updateProfile = useAuthStore((s) => s.updateProfile);
 
-    restore();
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  const login = useCallback(async ({ email, password }) => {
-    setError(null);
-    await authApi.login({ email, password });
-    const me = await authApi.fetchMe();
-    setProfile(me);
-    setStatus("authenticated");
-    return me;
-  }, []);
-
-  const register = useCallback(async ({ email, password, fullName, role }) => {
-    setError(null);
-    await authApi.register({ email, password, fullName, role });
-    const me = await authApi.fetchMe();
-    setProfile(me);
-    setStatus("authenticated");
-    return me;
-  }, []);
-
-  const logout = useCallback(() => {
-    authApi.logout();
-    setProfile(null);
-    setStatus("unauthenticated");
-  }, []);
-
-  const updateProfile = useCallback(async ({ fullName }) => {
-    const updated = await authApi.updateMe({ fullName });
-    setProfile(updated);
-    return updated;
-  }, []);
-
-  const value = {
+  return {
     profile,
     status, // loading | authenticated | unauthenticated
     isAuthenticated: status === "authenticated",
     isInstructor: profile?.role === "instructor",
     isAdmin: profile?.role === "admin",
     error,
-    setError,
     login,
     register,
     logout,
     updateProfile,
   };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
-  return ctx;
 }

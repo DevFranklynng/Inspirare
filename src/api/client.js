@@ -2,8 +2,13 @@
 // Every request (auth headers, JSON headers, parsing, error shaping) goes
 // through here so no component ever calls fetch() directly.
 
+// VITE_API_URL is the name used in the admin-system brief; VITE_API_BASE_URL
+// is what the rest of this project already uses. Both are honored so
+// neither an existing .env nor a freshly-copied .env.example breaks.
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://inspirare-api.vercel.app/api";
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://inspirare-api.vercel.app/api";
 
 const TOKEN_KEY = "inspirare_access_token";
 const REFRESH_KEY = "inspirare_refresh_token";
