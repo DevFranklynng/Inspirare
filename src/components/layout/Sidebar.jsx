@@ -19,7 +19,7 @@ const studentNav = [
   { to: "/schedule", label: "Schedule", icon: CalendarDays },
   { to: "/materials", label: "Materials", icon: FolderOpen },
   { to: "/forum", label: "Forum", icon: MessageSquare },
-  { to: "/assessments", label: "Assessments", icon: ClipboardCheck },
+  { to: "/assignments", label: "Assessments", icon: ClipboardCheck },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
