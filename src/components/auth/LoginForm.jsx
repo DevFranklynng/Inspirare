@@ -10,7 +10,7 @@ export default function LoginForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const redirectTo = location.state?.from || "/dashboard";
+  const explicitRedirect = location.state?.from;
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [fieldErrors, setFieldErrors] = useState({});
@@ -39,7 +39,11 @@ export default function LoginForm() {
     setFormError(null);
     setIsSubmitting(true);
     try {
-      await login(form);
+      const me = await login(form);
+      // Honor a deep link the user was trying to reach before being sent to
+      // /login; otherwise route by role — admins land on /admin, everyone
+      // else on /dashboard.
+      const redirectTo = explicitRedirect || (me.role === "admin" ? "/admin" : "/dashboard");
       navigate(redirectTo, { replace: true });
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
