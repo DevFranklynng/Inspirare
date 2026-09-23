@@ -10,6 +10,7 @@ import {
   GraduationCap,
   LogOut,
   X,
+  ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -29,9 +30,15 @@ const instructorNav = [
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
+const adminNav = [
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/admin", label: "Admin", icon: ShieldCheck },
+  { to: "/settings", label: "Settings", icon: Settings },
+];
+
 export default function Sidebar({ onNavigate, className = "" }) {
-  const { profile, isInstructor, logout } = useAuth();
-  const items = isInstructor ? instructorNav : studentNav;
+  const { profile, isInstructor, isAdmin, logout } = useAuth();
+  const items = isAdmin ? adminNav : isInstructor ? instructorNav : studentNav;
 
   return (
     <aside className={`flex h-full w-64 shrink-0 flex-col justify-between bg-white px-4 py-6 ${className}`}>

@@ -12,6 +12,7 @@ import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import Assignments from "./pages/Assignments";
 import Settings from "./pages/Settings";
+import Admin from "./pages/Admin";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
@@ -51,6 +52,7 @@ export default function App() {
               />
               <Route path="/assessments" element={<Navigate to="/assignments" replace />} />
               <Route path="/settings" element={withBoundary(<Settings />)} />
+              <Route path="/admin" element={withBoundary(<Admin />)} />
             </Route>
           </Route>
 
