@@ -77,16 +77,24 @@ export function AuthProvider({ children }) {
     setStatus("unauthenticated");
   }, []);
 
+  const updateProfile = useCallback(async ({ fullName }) => {
+    const updated = await authApi.updateMe({ fullName });
+    setProfile(updated);
+    return updated;
+  }, []);
+
   const value = {
     profile,
     status, // loading | authenticated | unauthenticated
     isAuthenticated: status === "authenticated",
     isInstructor: profile?.role === "instructor",
+    isAdmin: profile?.role === "admin",
     error,
     setError,
     login,
     register,
     logout,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
