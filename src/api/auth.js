@@ -1,0 +1,34 @@
+import { request, setSession, clearSession } from "./client";
+
+export async function register({ email, password, fullName, role = "student" }) {
+  const data = await request("/auth/register", {
+    method: "POST",
+    auth: false,
+    body: { email, password, full_name: fullName, role },
+  });
+  setSession(data.session);
+  return data;
+}
+
+export async function login({ email, password }) {
+  const data = await request("/auth/login", {
+    method: "POST",
+    auth: false,
+    body: { email, password },
+  });
+  setSession(data.session);
+  return data;
+}
+
+// Called on app boot (and after login/register) to fetch the profile that's
+// the source of truth for name/role/avatar/department/level/institution.
+// skipUnauthorizedHandler avoids a redirect loop while we're still figuring
+// out whether the stored token is valid.
+export async function fetchMe() {
+  const data = await request("/auth/me", { skipUnauthorizedHandler: true });
+  return data.profile;
+}
+
+export function logout() {
+  clearSession();
+}

@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Decorative wave divider used on the auth screen */
+.auth-wave {
+  clip-path: polygon(
+    0% 0%,
+    8% 2%,
+    16% 6%,
+    22% 12%,
+    26% 20%,
+    28% 30%,
+    27% 40%,
+    23% 49%,
+    22% 55%,
+    25% 62%,
+    30% 68%,
+    33% 76%,
+    31% 85%,
+    24% 93%,
+    14% 98%,
+    5% 100%,
+    0% 100%
+  );
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-brand-200 rounded-full;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
