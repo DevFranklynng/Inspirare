@@ -40,13 +40,13 @@ export default function Courses() {
       await enrollInCourse(courseId);
       setCourses((prev) => prev.map((c) => (c.id === courseId ? { ...c, is_enrolled: true } : c)));
     } catch (err) {
-      if (err instanceof ApiError && err.status === 409) {
-        setCourses((prev) => prev.map((c) => (c.id === courseId ? { ...c, is_enrolled: true } : c)));
-      } else if (err instanceof ApiError) {
-        setNotice({ type: "error", message: err.message });
-      } else {
-        setNotice({ type: "error", message: "We couldn't connect to Inspirare right now. Please try again." });
-      }
+      // A 409 here means the student is already enrolled (in this course or
+      // another — only one course at a time is allowed), so surface the
+      // backend's message instead of assuming this specific course flipped.
+      setNotice({
+        type: "error",
+        message: err instanceof ApiError ? err.message : "Couldn't enroll. Please try again.",
+      });
     } finally {
       setEnrollingId(null);
     }

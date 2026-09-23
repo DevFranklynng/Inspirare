@@ -10,7 +10,6 @@ import SectionErrorBoundary from "./components/ui/SectionErrorBoundary";
 
 import RoleHome from "./pages/RoleHome";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -21,6 +20,7 @@ import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminCourses from "./pages/admin/AdminCourses";
 import AdminEnrollments from "./pages/admin/AdminEnrollments";
@@ -39,7 +39,6 @@ export default function App() {
 
           <Route element={<RedirectIfAuthenticated />}>
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
           </Route>
 
           <Route element={<RequireAuth />}>
@@ -73,6 +72,7 @@ export default function App() {
             <Route element={<AdminRoute />}>
               <Route element={<AdminLayout />}>
                 <Route path="/admin" element={withBoundary(<AdminDashboard />)} />
+                <Route path="/admin/users" element={withBoundary(<AdminUsers />)} />
                 <Route path="/admin/students" element={withBoundary(<AdminStudents />)} />
                 <Route path="/admin/courses" element={withBoundary(<AdminCourses />)} />
                 <Route path="/admin/enrollments" element={withBoundary(<AdminEnrollments />)} />

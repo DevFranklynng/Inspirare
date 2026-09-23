@@ -29,7 +29,7 @@ src/
                      the store (same useAuth() shape as before)
   routes/           AdminRoute.jsx — guards the /admin/* route tree
   components/
-    auth/            AuthLayout, LoginForm, RegisterForm, AuthGuard,
+    auth/            AuthLayout, LoginForm, AuthGuard,
                       BlockAdminFromAppArea
     layout/          AppLayout, Sidebar, Topbar (student/instructor)
     dashboard/       WelcomeCard, ProgressCard, UpcomingAssignments,
@@ -43,18 +43,20 @@ src/
     components/      AdminSidebar, AdminHeader, AdminUi.jsx (StatCard,
                       StatusBadge, SearchInput, AdminSelect,
                       LoadingState/EmptyState/ErrorState, ConfirmDialog,
-                      AdminButton), DataTable.jsx
-  pages/             Login, Register, RoleHome, Dashboard, Courses,
+                      AdminButton), DataTable.jsx,
+                      RegisterIndividual.jsx
+  pages/             Login, RoleHome, Dashboard, Courses,
                       CourseDetail, Assignments, Settings, Placeholder,
                       Unauthorized, NotFound
-  pages/admin/       AdminDashboard, AdminStudents, AdminCourses,
+  pages/admin/       AdminDashboard, AdminUsers, AdminStudents, AdminCourses,
                       AdminEnrollments, AdminSettings
 ```
 
 ## Auth flow
 
-1. `/login` or `/register` calls the API, stores `access_token` /
-   `refresh_token` in `localStorage`.
+1. `/login` calls the API, stores `access_token` / `refresh_token` in
+   `localStorage`. There is **no public registration** — accounts are created
+   by an admin (`Register individual` on the admin dashboard).
 2. `useAuthStore` (Zustand, `src/stores/authStore.js`) then calls
    `GET /auth/me` and uses that profile — never a frontend guess — as the
    source of truth for name/role/avatar/track.
@@ -77,34 +79,24 @@ src/
 
 ## Admin system
 
-### Creating an admin (no public registration exists for this — by design)
+### Creating accounts
 
-1. Register a normal account through the existing `POST /auth/register`
-   endpoint (Postman, or the app's own sign-up form) — it'll be created as
-   a `student` or `instructor`.
-2. Find that user's id (Supabase Table Editor → `profiles`, or
-   Authentication → Users).
-3. Promote it directly in the database:
-   ```sql
-   update public.profiles set role = 'admin' where id = '<user-uuid>';
-   ```
-   (`inspirare-backend/database/migration_admin_and_profile_cleanup.sql`
-   already adds `admin` to the role enum — no new migration needed.)
-4. Log in with that account's email/password on the normal `/login` page.
-   The frontend reads `profile.role === "admin"` from `/auth/me` and sends
-   you to `/admin`.
-
-There is no `AdminRegister` page, no `/admin/register` route, and no public
-admin-creation endpoint anywhere in this frontend.
+There is no public registration page. The admin dashboard has a
+**Register individual** section that creates account for anyone (student,
+instructor, or admin) with a generated password, and prints the email +
+password credentials so they can be handed off. The `/admin/users` page
+lists every account and lets the admin reassign roles (`student`,
+`instructor`, `admin`) — a user can't change their own role.
 
 ### Routes
 
 | Route | Page |
 |---|---|
-| `/admin` | Platform overview: total students/instructors/courses/enrollments (real `GET /dashboard` aggregate for an admin), published/unpublished split + recent courses (derived from `GET /admin/courses`), quick actions |
-| `/admin/students` | `GET /admin/students` — search, per-row "Enroll" action |
-| `/admin/courses` | `GET /admin/courses` — search + publish-status filter, per-row "Enroll student" action |
-| `/admin/enrollments` | `POST`/`DELETE /admin/enroll` — student + course pickers (pre-fillable via `?studentId=`/`?courseId=` from the row actions above), confirm dialog before removing an enrollment |
+| `/admin` | Platform overview: total students/instructors/courses/enrollments (real `GET /dashboard` aggregate for an admin), published/unpublished split + recent courses (derived from `GET /admin/courses`), quick actions, and the **Register individual** section |
+| `/admin/users` | `GET /admin/users` + `PATCH /admin/profiles/:id` — every account, per-row role selector (reassign roles, promote to admin/instructor) |
+| `/admin/students` | `GET /admin/students` + `GET /admin/enrollments` — search, per-row **enrolled** badge showing the current course, "Enroll"/"Manage" action |
+| `/admin/courses` | `GET /admin/courses` + `POST /admin/courses` (new course with instructor picker) + `PATCH /admin/courses/:id` (per-row publish/unpublish toggle), search + publish-status filter |
+| `/admin/enrollments` | `POST`/`DELETE /admin/enroll` — **one course per student at a time**: unenrolled students only appear in the enroll picker; enrolled students are listed under "Current enrollments" with a remove action (pre-fillable via `?studentId=`/`?courseId=`) |
 | `/admin/settings` | Read-only admin profile — admins are managed directly in the database, so there's no edit form here |
 
 ### Design
@@ -124,18 +116,22 @@ Inspected `inspirare-backend/src` before touching anything:
   the `profiles` table (via the service-role client, bypassing RLS) on
   every call — a role can't be spoofed by editing a JWT claim client-side.
 - `routes/adminRoutes.js`: `router.use(requireAuth, requireRole('admin'))`
-  covers all four admin endpoints in one line.
+  covers all admin endpoints in one line.
 - `controllers/authController.js`: `register()` explicitly rejects any
   `role` other than `student`/`instructor` with a 400 — there's no way to
-  self-register as admin even by editing the request body.
+  self-register as admin even by editing the request body. Admin-created
+  accounts (including admins) go through the new
+  `POST /api/admin/register` endpoint.
 - `GET /api/dashboard` already branches on `role === 'admin'` server-side
   and returns a real aggregate (`total_students`, `total_instructors`,
   `total_courses`, `total_enrollments`) — this wasn't mentioned in the
   brief's endpoint list, but it's what `AdminDashboard.jsx` uses instead
   of summing two separate list calls.
-
-**No backend or database changes were made** — everything above already
-matched the brief's security requirements.
+- One course per student is enforced server-side in both
+  `POST /api/admin/enroll` and `POST /api/courses/:id/enroll`, and
+  `GET /api/admin/enrollments` backs the "mark as enrolled" + picker
+  filtering in the admin UI (`database/migration_one_course_per_student.sql`
+  hardens this with a unique index once existing data is clean).
 
 ## Known API limitations (discovered while building)
 
@@ -160,7 +156,8 @@ matched the brief's security requirements.
 ## Remaining work
 
 - Instructor authoring UI (create/edit course, add modules/lessons/
-  assignments, grade submissions) is not built.
+  assignments, grade submissions) is not built — admins create and publish
+  courses for now.
 - No automated tests.
 - `npm run build` has not been run in the environment this project was
   built in (no outbound network access there, so `node_modules` was never
@@ -170,7 +167,7 @@ matched the brief's security requirements.
 ## Manual test checklist
 
 **Core app**
-1. Register a new student, confirm redirect to `/dashboard`.
+1. On `/login`, confirm there is no "create an account" link.
 2. Refresh the page — session should restore without a login flash.
 3. Log out, confirm `/dashboard` redirects to `/login`.
 4. Log back in with wrong password — see "Invalid email or password."
@@ -180,27 +177,32 @@ matched the brief's security requirements.
 6. Open a course, mark a lesson complete, confirm the checkmark appears
    without a page reload.
 7. Submit an assignment with just a file link, then just text, then both.
-8. Register a second account with role `instructor` (manual API call,
-   since sign-up UI defaults to student) and confirm the dashboard
-   switches to the instructor summary view.
 
 **Admin**
-9. Promote an existing account to `admin` in the database (see above),
-   log in — confirm redirect straight to `/admin`, not `/dashboard`.
-10. While logged in as that admin, manually navigate to `/dashboard` —
-    confirm you're bounced back to `/admin`.
-11. Log in as a student or instructor and manually navigate to `/admin` —
+8. Log in as admin — confirm redirect straight to `/admin`, not
+   `/dashboard`.
+9. While logged in as that admin, manually navigate to `/dashboard` —
+   confirm you're bounced back to `/admin`.
+10. Log in as a student or instructor and manually navigate to `/admin` —
     confirm you land on `/unauthorized`, with a working "back to your
     dashboard" button, not a blank page or a 500.
-12. `/admin/students` — confirm the list matches real registered students,
-    search filters correctly, empty state shows if there are none.
-13. `/admin/courses` — confirm every course shows regardless of publish
-    state, the publish filter and search both work.
-14. `/admin/enrollments` — enroll a student in a course, confirm success;
-    try the same pair again, confirm the 409 message; remove the
-    enrollment via the confirm dialog, confirm success.
-15. Click "Enroll" from a row on `/admin/students`, confirm the
-    enrollments page opens with that student pre-selected (same for a
-    course row on `/admin/courses`).
-16. Log out from `/admin`, confirm it behaves the same as the
+11. Admin dashboard — "Register an individual": create a student, confirm
+    the printed email/password match what's shown, then log in as that
+    student with those credentials.
+12. `/admin/users` — change a student's role to instructor, confirm the
+    badge updates and the change survives a refresh; try to demote
+    yourself, confirm the backend rejects it.
+13. `/admin/students` — confirm each student shows either the course they're
+    enrolled in or "Not enrolled".
+14. `/admin/courses` — create a course (pick an instructor), confirm it
+    appears as "Unpublished"; toggle Publish/Unpublish and confirm the
+    badge changes.
+15. `/admin/enrollments` — an already-enrolled student should NOT appear in
+    the student picker; enroll an unenrolled student, confirm they move to
+    "Current enrollments" and disappear from the picker; try enrolling a
+    second course for that same student directly via the API — confirm the
+    409.
+16. Remove an enrollment from "Current enrollments", confirm the student
+    reappears in the enroll picker.
+17. Log out from `/admin`, confirm it behaves the same as the
     student/instructor logout.

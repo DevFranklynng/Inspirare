@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, UserPlus } from "lucide-react";
-import { fetchAllCourses } from "../../api/admin";
+import { BookOpen, UserPlus, Plus, Eye, EyeOff, X } from "lucide-react";
+import { fetchAllCourses, fetchInstructors, createCourse, updateCourse } from "../../api/admin";
 import { ApiError } from "../../api/client";
 import DataTable from "../../features/admin/components/DataTable";
 import {
@@ -22,20 +22,32 @@ const columns = [
   { key: "actions", label: "Actions" },
 ];
 
+const fieldClass =
+  "w-full rounded-xl border border-ink-600 bg-ink-900 px-4 py-2.5 text-sm text-white placeholder:text-ink-300 outline-none focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20";
+
 export default function AdminCourses() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const [instructors, setInstructors] = useState([]);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [query, setQuery] = useState("");
   const [publishFilter, setPublishFilter] = useState("all"); // all | published | unpublished
 
+  const [showCreate, setShowCreate] = useState(false);
+  const [createForm, setCreateForm] = useState({ title: "", description: "", instructorId: "" });
+  const [createErrors, setCreateErrors] = useState({});
+  const [createNotice, setCreateNotice] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [publishingId, setPublishingId] = useState(null);
+
   const load = useCallback(async () => {
     setStatus("loading");
     setError(null);
     try {
-      const data = await fetchAllCourses();
-      setCourses(data);
+      const [coursesData, instructorsData] = await Promise.all([fetchAllCourses(), fetchInstructors()]);
+      setCourses(coursesData);
+      setInstructors(instructorsData);
       setStatus("success");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "We couldn't load courses.");
@@ -59,6 +71,61 @@ export default function AdminCourses() {
     });
   }, [courses, query, publishFilter]);
 
+  function openCreate() {
+    setShowCreate(true);
+    setCreateForm({ title: "", description: "", instructorId: "" });
+    setCreateErrors({});
+    setCreateNotice(null);
+  }
+
+  async function handleCreateCourse(e) {
+    e.preventDefault();
+    if (isCreating) return;
+
+    const errors = {};
+    if (!createForm.title.trim()) errors.title = "Enter a course title.";
+    if (!createForm.instructorId) errors.instructorId = "Choose the instructor who owns this course.";
+    setCreateErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setCreateNotice(null);
+    setIsCreating(true);
+    try {
+      await createCourse({
+        title: createForm.title.trim(),
+        description: createForm.description.trim() || undefined,
+        instructorId: createForm.instructorId,
+      });
+      setCreateNotice({ type: "success", message: "Course created." });
+      setShowCreate(false);
+      load();
+    } catch (err) {
+      setCreateNotice({
+        type: "error",
+        message: err instanceof ApiError ? err.message : "Couldn't create the course. Please try again.",
+      });
+    } finally {
+      setIsCreating(false);
+    }
+  }
+
+  async function handleTogglePublish(course) {
+    setPublishingId(course.id);
+    try {
+      await updateCourse(course.id, { is_published: !course.is_published });
+      setCourses((prev) =>
+        prev.map((c) => (c.id === course.id ? { ...c, is_published: !course.is_published } : c))
+      );
+    } catch (err) {
+      setCreateNotice({
+        type: "error",
+        message: err instanceof ApiError ? err.message : "Couldn't update the course status.",
+      });
+    } finally {
+      setPublishingId(null);
+    }
+  }
+
   if (status === "loading") return <AdminLoadingState label="Loading courses…" />;
   if (status === "error") return <AdminErrorState message={error} onRetry={load} />;
 
@@ -73,11 +140,112 @@ export default function AdminCourses() {
             <option value="published">Published</option>
             <option value="unpublished">Unpublished</option>
           </AdminSelect>
+          <AdminButton onClick={openCreate}>
+            <Plus className="h-4 w-4" />
+            New course
+          </AdminButton>
         </div>
       </div>
 
+      {showCreate && (
+        <div className="rounded-2xl border border-ink-600/60 bg-ink-800 p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-white">
+              <Plus className="h-4 w-4 text-gold-400" />
+              Create a course
+            </h2>
+            <button onClick={() => setShowCreate(false)} className="rounded-lg p-1 text-ink-300 hover:bg-ink-700" aria-label="Close">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          {instructors.length === 0 ? (
+            <p className="text-sm text-ink-300">
+              No instructors yet. Promote someone to instructor on the <button onClick={() => navigate("/admin/users")} className="font-semibold text-gold-400 hover:text-gold-300">Users</button> page, then create a course.
+            </p>
+          ) : (
+            <form onSubmit={handleCreateCourse} noValidate className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-ink-200">Title</label>
+                  <input
+                    type="text"
+                    value={createForm.title}
+                    onChange={(e) => {
+                      setCreateForm((f) => ({ ...f, title: e.target.value }));
+                      setCreateErrors((fe) => ({ ...fe, title: undefined }));
+                    }}
+                    placeholder="e.g. Advanced Web Development"
+                    className={fieldClass}
+                  />
+                  {createErrors.title && <p className="mt-1 text-xs text-red-400">{createErrors.title}</p>}
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-ink-200">Instructor</label>
+                  <AdminSelect
+                    value={createForm.instructorId}
+                    onChange={(e) => {
+                      setCreateForm((f) => ({ ...f, instructorId: e.target.value }));
+                      setCreateErrors((fe) => ({ ...fe, instructorId: undefined }));
+                    }}
+                  >
+                    <option value="">Select an instructor…</option>
+                    {instructors.map((i) => (
+                      <option key={i.id} value={i.id}>
+                        {i.full_name}
+                      </option>
+                    ))}
+                  </AdminSelect>
+                  {createErrors.instructorId && <p className="mt-1 text-xs text-red-400">{createErrors.instructorId}</p>}
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-ink-200">Description</label>
+                <textarea
+                  value={createForm.description}
+                  onChange={(e) => setCreateForm((f) => ({ ...f, description: e.target.value }))}
+                  rows={3}
+                  placeholder="Optional short description…"
+                  className={fieldClass}
+                />
+              </div>
+
+              {createNotice && (
+                <p
+                  className={`rounded-lg px-3 py-2 text-sm ${
+                    createNotice.type === "error" ? "bg-red-950/40 text-red-300" : "bg-gold-400/10 text-gold-300"
+                  }`}
+                >
+                  {createNotice.message}
+                </p>
+              )}
+
+              <div className="flex gap-3">
+                <AdminButton type="submit" isLoading={isCreating} loadingText="Creating…">
+                  Create course
+                </AdminButton>
+                <AdminButton variant="secondary" type="button" onClick={() => setShowCreate(false)}>
+                  Cancel
+                </AdminButton>
+              </div>
+            </form>
+          )}
+        </div>
+      )}
+
       {courses.length === 0 ? (
-        <AdminEmptyState icon={BookOpen} title="No courses yet" description="Courses created by instructors will show up here." />
+        <AdminEmptyState
+          icon={BookOpen}
+          title="No courses yet"
+          description="Create the first course, or wait for instructors to add theirs."
+          action={
+            <AdminButton variant="secondary" onClick={openCreate}>
+              <Plus className="h-4 w-4" />
+              New course
+            </AdminButton>
+          }
+        />
       ) : filtered.length === 0 ? (
         <AdminEmptyState icon={BookOpen} title="No matches" description="Try a different search or filter." />
       ) : (
@@ -92,14 +260,26 @@ export default function AdminCourses() {
             if (key === "id") return <span className="font-mono text-xs text-ink-300">{c.id}</span>;
             if (key === "actions")
               return (
-                <AdminButton
-                  variant="secondary"
-                  className="px-3 py-1.5 text-xs"
-                  onClick={() => navigate(`/admin/enrollments?courseId=${c.id}`)}
-                >
-                  <UserPlus className="h-3.5 w-3.5" />
-                  Enroll student
-                </AdminButton>
+                <div className="flex flex-wrap items-center gap-2">
+                  <AdminButton
+                    variant="secondary"
+                    className="px-3 py-1.5 text-xs"
+                    onClick={() => navigate(`/admin/enrollments?courseId=${c.id}`)}
+                  >
+                    <UserPlus className="h-3.5 w-3.5" />
+                    Enroll student
+                  </AdminButton>
+                  <AdminButton
+                    variant="secondary"
+                    className="px-3 py-1.5 text-xs"
+                    isLoading={publishingId === c.id}
+                    loadingText="Saving…"
+                    onClick={() => handleTogglePublish(c)}
+                  >
+                    {c.is_published ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    {c.is_published ? "Unpublish" : "Publish"}
+                  </AdminButton>
+                </div>
               );
             return null;
           }}

@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, BookOpen, UserPlus, Settings, GraduationCap, LogOut, X } from "lucide-react";
+import { LayoutDashboard, Users, BookOpen, UserPlus, Settings, GraduationCap, LogOut, X, UserCog } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/admin/users", label: "Users", icon: UserCog },
   { to: "/admin/students", label: "Students", icon: Users },
   { to: "/admin/courses", label: "Courses", icon: BookOpen },
   { to: "/admin/enrollments", label: "Enrollments", icon: UserPlus },

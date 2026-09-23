@@ -4,7 +4,6 @@ import { useAuth } from "../../context/AuthContext";
 import { ApiError } from "../../api/client";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import { AuthSwitchLink } from "./AuthLayout";
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -99,7 +98,9 @@ export default function LoginForm() {
         Sign In
       </Button>
 
-      <AuthSwitchLink prompt="Don't have an account?" linkLabel="Create an account" to="/register" />
+      <p className="mt-6 text-center text-sm text-slate-500">
+        Don't have an account? Contact your administrator — accounts are created for you.
+      </p>
     </form>
   );
 }

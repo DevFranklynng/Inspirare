@@ -51,11 +51,13 @@ export default function CourseDetail() {
       await enrollInCourse(id);
       setCourse((c) => ({ ...c, is_enrolled: true }));
     } catch (err) {
-      if (err instanceof ApiError && err.status === 409) {
-        setCourse((c) => ({ ...c, is_enrolled: true }));
-      } else {
-        setNotice({ type: "error", message: err instanceof ApiError ? err.message : "Enrollment failed." });
-      }
+      // A 409 means the student is already enrolled (this course or
+      // another — one course at a time is allowed), so show the backend's
+      // message rather than assuming this course flipped to enrolled.
+      setNotice({
+        type: "error",
+        message: err instanceof ApiError ? err.message : "Enrollment failed.",
+      });
     } finally {
       setEnrolling(false);
     }

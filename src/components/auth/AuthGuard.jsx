@@ -24,7 +24,7 @@ export function RequireAuth() {
   return <Outlet />;
 }
 
-// Keeps signed-in users off /login and /register.
+// Keeps signed-in users off /login.
 export function RedirectIfAuthenticated() {
   const { status } = useAuth();
 

@@ -4,6 +4,7 @@ import { Users, BookOpen, CheckCircle2, EyeOff, UserPlus, GraduationCap } from "
 import { fetchDashboard } from "../../api/dashboard";
 import { fetchAllCourses } from "../../api/admin";
 import { ApiError } from "../../api/client";
+import RegisterIndividual from "../../features/admin/components/RegisterIndividual";
 import {
   AdminPanel,
   StatCard,
@@ -102,6 +103,8 @@ export default function AdminDashboard() {
           <AdminButton variant="secondary">View courses</AdminButton>
         </Link>
       </div>
+
+      <RegisterIndividual />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, UserPlus } from "lucide-react";
-import { fetchStudents } from "../../api/admin";
+import { fetchStudents, fetchEnrollments } from "../../api/admin";
 import { ApiError } from "../../api/client";
 import DataTable from "../../features/admin/components/DataTable";
 import {
@@ -15,12 +15,14 @@ import {
 const columns = [
   { key: "name", label: "Student" },
   { key: "id", label: "Student ID" },
+  { key: "enrollment", label: "Enrollment" },
   { key: "actions", label: "Actions" },
 ];
 
 export default function AdminStudents() {
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
+  const [enrollments, setEnrollments] = useState([]);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [query, setQuery] = useState("");
@@ -29,8 +31,9 @@ export default function AdminStudents() {
     setStatus("loading");
     setError(null);
     try {
-      const data = await fetchStudents();
-      setStudents(data);
+      const [studentsData, enrollmentsData] = await Promise.all([fetchStudents(), fetchEnrollments()]);
+      setStudents(studentsData);
+      setEnrollments(enrollmentsData);
       setStatus("success");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "We couldn't load students.");
@@ -41,6 +44,14 @@ export default function AdminStudents() {
   useEffect(() => {
     load();
   }, [load]);
+
+  const enrollmentByStudent = useMemo(() => {
+    const map = {};
+    for (const e of enrollments) {
+      if (!map[e.student_id]) map[e.student_id] = e;
+    }
+    return map;
+  }, [enrollments]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -59,7 +70,11 @@ export default function AdminStudents() {
       </div>
 
       {students.length === 0 ? (
-        <AdminEmptyState icon={Users} title="No students yet" description="Students will appear here once they register." />
+        <AdminEmptyState
+          icon={Users}
+          title="No students yet"
+          description="Register students from the admin dashboard — they'll appear here."
+        />
       ) : filtered.length === 0 ? (
         <AdminEmptyState icon={Users} title="No matches" description={`No students match "${query}".`} />
       ) : (
@@ -70,6 +85,16 @@ export default function AdminStudents() {
           renderCell={(s, key) => {
             if (key === "name") return <span className="font-medium text-white">{s.full_name}</span>;
             if (key === "id") return <span className="font-mono text-xs text-ink-300">{s.id}</span>;
+            if (key === "enrollment") {
+              const e = enrollmentByStudent[s.id];
+              if (!e) return <span className="text-xs text-ink-400">Not enrolled</span>;
+              return (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-400/10 px-2.5 py-1 text-xs font-medium text-gold-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
+                  {e.course?.title || "Enrolled"}
+                </span>
+              );
+            }
             if (key === "actions")
               return (
                 <AdminButton
@@ -78,7 +103,7 @@ export default function AdminStudents() {
                   onClick={() => navigate(`/admin/enrollments?studentId=${s.id}`)}
                 >
                   <UserPlus className="h-3.5 w-3.5" />
-                  Enroll
+                  {enrollmentByStudent[s.id] ? "Manage" : "Enroll"}
                 </AdminButton>
               );
             return null;

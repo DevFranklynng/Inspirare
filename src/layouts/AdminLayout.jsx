@@ -5,6 +5,7 @@ import AdminHeader from "../features/admin/components/AdminHeader";
 
 const titles = {
   "/admin": "Dashboard",
+  "/admin/users": "Users",
   "/admin/students": "Students",
   "/admin/courses": "Courses",
   "/admin/enrollments": "Enrollments",
