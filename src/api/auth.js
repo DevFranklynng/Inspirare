@@ -21,11 +21,20 @@ export async function login({ email, password }) {
 }
 
 // Called on app boot (and after login/register) to fetch the profile that's
-// the source of truth for name/role/avatar/department/level/institution.
+// the source of truth for name/role/avatar/track.
 // skipUnauthorizedHandler avoids a redirect loop while we're still figuring
 // out whether the stored token is valid.
 export async function fetchMe() {
   const data = await request("/auth/me", { skipUnauthorizedHandler: true });
+  return data.profile;
+}
+
+// Students and instructors only — only full_name is editable this way.
+export async function updateMe({ fullName }) {
+  const data = await request("/auth/me", {
+    method: "PATCH",
+    body: { full_name: fullName },
+  });
   return data.profile;
 }
 
