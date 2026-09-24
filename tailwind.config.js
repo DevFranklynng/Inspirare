@@ -20,6 +20,30 @@ export default {
         // Admin-only palette (see src/layouts/AdminLayout.jsx and
         // src/features/admin/*) — deliberately separate from `brand` so the
         // student/instructor blue theme is untouched.
+        // Landing-page accents (see src/features/landing/*).
+        lilac: {
+          50: "#f6f3ff",
+          100: "#eee9ff",
+          200: "#ddd3ff",
+          300: "#c4b5fb",
+          400: "#a892f7",
+          500: "#8b72f2",
+          600: "#7455e6",
+        },
+        sun: {
+          100: "#fff0df",
+          400: "#f59a2e",
+          500: "#ee7f22",
+          600: "#d26a1b",
+        },
+        bloom: {
+          400: "#ff6b9d",
+          600: "#e8467c",
+        },
+        aqua: {
+          400: "#4cc9f0",
+          600: "#2a9fd6",
+        },
         ink: {
           50: "#f4f4f5",
           100: "#e4e4e7",
@@ -53,6 +77,20 @@ export default {
           "system-ui",
           "sans-serif",
         ],
+      },
+      keyframes: {
+        pop: {
+          "0%": { opacity: "0", transform: "translateY(14px) scale(0.96)" },
+          "100%": { opacity: "1", transform: "none" },
+        },
+        grow: {
+          "0%": { transform: "scaleY(0)" },
+          "100%": { transform: "scaleY(1)" },
+        },
+      },
+      animation: {
+        pop: "pop 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) both",
+        grow: "grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both",
       },
       boxShadow: {
         card: "0 1px 2px rgba(24, 29, 70, 0.04), 0 8px 24px rgba(24, 29, 70, 0.06)",

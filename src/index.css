@@ -48,3 +48,14 @@ body {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* Landing page: smooth in-page anchors, unless the visitor prefers less motion */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

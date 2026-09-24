@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoadingState from "../components/ui/LoadingState";
+import Landing from "./Landing";
 
 // Sends "/" to the right place: admins to /admin, everyone else to
-// /dashboard, unauthenticated visitors to /login.
+// /dashboard, and shows the public landing page to signed-out visitors.
 export default function RoleHome() {
   const { status, isAdmin } = useAuth();
 
@@ -15,7 +16,7 @@ export default function RoleHome() {
     );
   }
 
-  if (status === "unauthenticated") return <Navigate to="/login" replace />;
+  if (status === "unauthenticated") return <Landing />;
 
   return <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace />;
 }
