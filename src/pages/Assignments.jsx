@@ -56,7 +56,7 @@ export default function Assignments() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Assignments</h1>
+        <h1 className="text-2xl font-extrabold text-slate-900">Assignments</h1>
         <p className="text-sm text-slate-400">Upcoming work across your enrolled courses.</p>
       </div>
 

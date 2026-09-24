@@ -31,6 +31,75 @@ const instructorNav = [
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
+// Compact icon rail used on desktop (matches the reference's floating pill
+// nav). Its width is driven by the wrapper in AppLayout, which is a normal
+// flex sibling of the content column — so hovering to expand pushes the
+// page over rather than floating the rail on top of it. Labels fade in once
+// there's room for them, and `title`/`aria-label` keep every route reachable
+// even before it expands.
+export function SidebarRail() {
+  const { isInstructor, logout } = useAuth();
+  const items = isInstructor ? instructorNav : studentNav;
+
+  return (
+    <aside className="flex h-full w-full flex-col justify-between overflow-hidden rounded-xl3 bg-brand-600 py-6 shadow-pop">
+      <div className="flex flex-col gap-6">
+        <div className="flex h-11 items-center gap-3 px-[1.125rem]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
+            <GraduationCap className="h-5 w-5" />
+          </div>
+          <span className="whitespace-nowrap text-lg font-bold text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-hover:delay-150">
+            Inspirare
+          </span>
+        </div>
+
+        <nav className="flex flex-col gap-2 px-[1.125rem]">
+          {items.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              title={label}
+              aria-label={label}
+              className={({ isActive }) =>
+                `flex h-11 w-11 shrink-0 items-center gap-3 overflow-hidden rounded-2xl transition-[width,background-color] duration-300 group-hover:w-[13.25rem] ${
+                  isActive
+                    ? "bg-white text-brand-600 shadow-soft"
+                    : "text-brand-100 hover:bg-white/15"
+                }`
+              }
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="whitespace-nowrap text-sm font-medium opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-hover:delay-150">
+                {label}
+              </span>
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+
+      <div className="px-[1.125rem]">
+        <button
+          onClick={logout}
+          title="Log out"
+          aria-label="Log out"
+          className="flex h-11 w-11 shrink-0 items-center gap-3 overflow-hidden rounded-2xl text-brand-100 transition-[width,background-color] duration-300 hover:bg-white/15 group-hover:w-[13.25rem]"
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center">
+            <LogOut className="h-5 w-5" />
+          </span>
+          <span className="whitespace-nowrap text-sm font-medium opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-hover:delay-150">
+            Log Out
+          </span>
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+// Full labelled sidebar used in the mobile drawer, where a slide-out panel
+// has room for text and a quick profile glance.
 export default function Sidebar({ onNavigate, className = "" }) {
   const { profile, isInstructor, logout } = useAuth();
   const items = isInstructor ? instructorNav : studentNav;

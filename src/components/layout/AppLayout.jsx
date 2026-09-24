@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import Sidebar, { SidebarRail } from "./Sidebar";
 import Topbar from "./Topbar";
 
 export default function AppLayout() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-brand-50/60">
-      <div className="mx-auto flex min-h-screen max-w-[1600px]">
-        {/* Desktop sidebar */}
-        <div className="hidden border-r border-slate-100 md:block">
-          <Sidebar />
+    <div className="min-h-screen bg-[#f3f2fb] p-2 sm:p-4 lg:p-6">
+      <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-[1600px] gap-4 lg:gap-6">
+        {/* Desktop icon rail — width lives on this wrapper (not the aside)
+            so it's a normal flex sibling: expanding it on hover pushes the
+            content column over smoothly instead of floating on top of it. */}
+        <div className="group hidden w-20 shrink-0 transition-[width] duration-300 ease-in-out hover:w-64 md:block">
+          <SidebarRail />
         </div>
 
-        {/* Mobile drawer */}
+        {/* Mobile drawer (full labelled sidebar) */}
         {mobileNavOpen && (
           <div className="fixed inset-0 z-40 md:hidden">
             <div
@@ -27,9 +29,9 @@ export default function AppLayout() {
           </div>
         )}
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col gap-4 lg:gap-6">
           <Topbar onMenuClick={() => setMobileNavOpen(true)} />
-          <main className="flex-1 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
+          <main className="flex-1 overflow-x-hidden pb-6">
             <Outlet />
           </main>
         </div>

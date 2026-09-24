@@ -87,9 +87,9 @@ export default function CourseDetail() {
         Back to courses
       </Link>
 
-      <div className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-card sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-xl3 bg-white p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">{course.title}</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900">{course.title}</h1>
           {course.description && <p className="mt-1 max-w-2xl text-sm text-slate-500">{course.description}</p>}
         </div>
         {!isInstructor && course.is_enrolled === false && (

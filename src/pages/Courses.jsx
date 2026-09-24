@@ -58,7 +58,7 @@ export default function Courses() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-xl font-bold text-slate-900">{isInstructor ? "Your courses" : "Courses"}</h1>
+        <h1 className="text-2xl font-extrabold text-slate-900">{isInstructor ? "Your courses" : "Courses"}</h1>
         <p className="text-sm text-slate-400">
           {isInstructor ? "Courses you've created." : "Browse published courses and track your enrollment."}
         </p>

@@ -10,7 +10,7 @@ export function ProgressBar({ value = 0, className = "" }) {
   );
 }
 
-export function ProgressRing({ value = 0, size = 64, stroke = 6, label }) {
+export function ProgressRing({ value = 0, size = 64, stroke = 6, label, ringClassName = "stroke-brand-500" }) {
   const pct = Math.max(0, Math.min(100, value));
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -34,7 +34,7 @@ export function ProgressRing({ value = 0, size = 64, stroke = 6, label }) {
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          className="fill-none stroke-brand-500 transition-all"
+          className={`fill-none transition-all ${ringClassName}`}
         />
       </svg>
       <span className="absolute text-xs font-bold text-slate-700">

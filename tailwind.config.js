@@ -57,9 +57,12 @@ export default {
       boxShadow: {
         card: "0 1px 2px rgba(24, 29, 70, 0.04), 0 8px 24px rgba(24, 29, 70, 0.06)",
         panel: "0 20px 60px rgba(24, 29, 70, 0.18)",
+        soft: "0 2px 6px rgba(24, 29, 70, 0.04), 0 16px 32px -12px rgba(24, 29, 70, 0.10)",
+        pop: "0 12px 24px -8px rgba(84, 104, 227, 0.35)",
       },
       borderRadius: {
         xl2: "1.25rem",
+        xl3: "1.75rem",
       },
     },
   },

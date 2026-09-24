@@ -5,6 +5,7 @@ import { ApiError } from "../api/client";
 import LoadingState from "../components/ui/LoadingState";
 import ErrorState from "../components/ui/ErrorState";
 import WelcomeCard from "../components/dashboard/WelcomeCard";
+import QuickLinksCard from "../components/dashboard/QuickLinksCard";
 import ProgressCard from "../components/dashboard/ProgressCard";
 import UpcomingAssignments from "../components/dashboard/UpcomingAssignments";
 import PerformanceCard from "../components/dashboard/PerformanceCard";
@@ -44,15 +45,20 @@ export default function Dashboard() {
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   return (
-    <div className="flex flex-col gap-6">
-      <WelcomeCard
-        name={firstName}
-        subtitle={
-          isInstructor
-            ? "Here's how your courses are doing."
-            : "Here's where your courses and assignments stand."
-        }
-      />
+    <div className="flex flex-col gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+        <div className="lg:col-span-2">
+          <WelcomeCard
+            name={firstName}
+            subtitle={
+              isInstructor
+                ? "Here's how your courses are doing."
+                : "Here's where your courses and assignments stand."
+            }
+          />
+        </div>
+        <QuickLinksCard isInstructor={isInstructor} />
+      </div>
 
       {isInstructor ? (
         <>
@@ -87,7 +93,7 @@ export default function Dashboard() {
           </Card>
         </>
       ) : (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
           <div className="lg:col-span-2">
             <ProgressCard courses={data.enrolled_courses} />
           </div>
