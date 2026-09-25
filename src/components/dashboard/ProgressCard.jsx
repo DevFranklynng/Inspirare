@@ -9,7 +9,7 @@ export default function ProgressCard({ courses }) {
   return (
     <Card className="h-full">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-800">Course progress</h2>
+        <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Course progress</h2>
       </div>
 
       {(!courses || courses.length === 0) ? (
@@ -27,8 +27,8 @@ export default function ProgressCard({ courses }) {
                 size={72}
                 ringClassName={ringStyles[i % ringStyles.length]}
               />
-              <p className="line-clamp-2 text-xs font-medium text-slate-600">{c.title}</p>
-              <p className="text-[11px] text-slate-400">
+              <p className="line-clamp-2 text-xs font-medium text-slate-600 dark:text-slate-400">{c.title}</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">
                 {c.completed_lessons}/{c.total_lessons} lessons
               </p>
             </div>

@@ -11,7 +11,7 @@ body,
 }
 
 body {
-  @apply bg-[#f3f2fb] text-slate-900 antialiased;
+  @apply bg-[#f3f2fb] text-slate-900 antialiased dark:bg-ink-950 dark:text-slate-100;
   font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 

@@ -105,19 +105,19 @@ export default function Sidebar({ onNavigate, className = "" }) {
   const items = isInstructor ? instructorNav : studentNav;
 
   return (
-    <aside className={`flex h-full w-64 shrink-0 flex-col justify-between bg-white px-4 py-6 ${className}`}>
+    <aside className={`flex h-full w-64 shrink-0 flex-col justify-between bg-white px-4 py-6 dark:bg-ink-900 ${className}`}>
       <div>
         <div className="mb-8 flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white">
               <GraduationCap className="h-5 w-5" />
             </div>
-            <span className="text-lg font-bold text-slate-900">Inspirare</span>
+            <span className="text-lg font-bold text-slate-900 dark:text-slate-100">Inspirare</span>
           </div>
           {onNavigate && (
             <button
               onClick={onNavigate}
-              className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 md:hidden"
+              className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 md:hidden dark:hover:bg-ink-800"
               aria-label="Close menu"
             >
               <X className="h-5 w-5" />
@@ -135,7 +135,7 @@ export default function Sidebar({ onNavigate, className = "" }) {
                 `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-brand-600 text-white shadow-sm"
-                    : "text-slate-500 hover:bg-brand-50 hover:text-brand-700"
+                    : "text-slate-500 hover:bg-brand-50 hover:text-brand-700 dark:text-slate-400 dark:hover:bg-ink-800 dark:hover:text-brand-300"
                 }`
               }
             >
@@ -146,11 +146,11 @@ export default function Sidebar({ onNavigate, className = "" }) {
         </nav>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-slate-100 pt-4">
-        <p className="truncate px-2 text-xs text-slate-400">{profile?.full_name}</p>
+      <div className="flex flex-col gap-3 border-t border-slate-100 pt-4 dark:border-ink-700">
+        <p className="truncate px-2 text-xs text-slate-400 dark:text-slate-500">{profile?.full_name}</p>
         <button
           onClick={logout}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-950/40 dark:hover:text-red-400"
         >
           <LogOut className="h-4.5 w-4.5" />
           Log Out

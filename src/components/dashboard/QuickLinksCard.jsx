@@ -28,12 +28,12 @@ export default function QuickLinksCard({ isInstructor }) {
         <Link
           key={to}
           to={to}
-          className="flex flex-col items-center justify-center gap-2 rounded-xl3 bg-white p-3 text-center shadow-soft transition-transform hover:-translate-y-0.5"
+          className="flex flex-col items-center justify-center gap-2 rounded-xl3 bg-white p-3 text-center shadow-soft transition-transform hover:-translate-y-0.5 dark:bg-ink-900"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
             <Icon className="h-4.5 w-4.5" />
           </div>
-          <p className="text-xs font-semibold text-slate-700">{label}</p>
+          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{label}</p>
         </Link>
       ))}
     </div>

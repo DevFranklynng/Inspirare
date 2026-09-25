@@ -1,7 +1,7 @@
 export function ProgressBar({ value = 0, className = "" }) {
   const pct = Math.max(0, Math.min(100, value));
   return (
-    <div className={`h-2 w-full overflow-hidden rounded-full bg-slate-100 ${className}`}>
+    <div className={`h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-ink-700 ${className}`}>
       <div
         className="h-full rounded-full bg-brand-500 transition-all"
         style={{ width: `${pct}%` }}
@@ -24,7 +24,7 @@ export function ProgressRing({ value = 0, size = 64, stroke = 6, label, ringClas
           cy={size / 2}
           r={radius}
           strokeWidth={stroke}
-          className="fill-none stroke-slate-100"
+          className="fill-none stroke-slate-100 dark:stroke-ink-700"
         />
         <circle
           cx={size / 2}
@@ -37,7 +37,7 @@ export function ProgressRing({ value = 0, size = 64, stroke = 6, label, ringClas
           className={`fill-none transition-all ${ringClassName}`}
         />
       </svg>
-      <span className="absolute text-xs font-bold text-slate-700">
+      <span className="absolute text-xs font-bold text-slate-700 dark:text-slate-200">
         {label ?? `${Math.round(pct)}%`}
       </span>
     </div>

@@ -58,14 +58,14 @@ export default function Courses() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-900">{isInstructor ? "Your courses" : "Courses"}</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">{isInstructor ? "Your courses" : "Courses"}</h1>
+        <p className="text-sm text-slate-400 dark:text-slate-500">
           {isInstructor ? "Courses you've created." : "Browse published courses and track your enrollment."}
         </p>
       </div>
 
       {notice && (
-        <p className={`rounded-lg px-3 py-2 text-sm ${notice.type === "error" ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
+        <p className={`rounded-lg px-3 py-2 text-sm ${notice.type === "error" ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400" : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"}`}>
           {notice.message}
         </p>
       )}

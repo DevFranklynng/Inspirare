@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar, { SidebarRail } from "./Sidebar";
 import Topbar from "./Topbar";
+import { useAuth } from "../../context/AuthContext";
+import { useThemeStore } from "../../stores/themeStore";
 
 export default function AppLayout() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const { profile } = useAuth();
+  const mode = useThemeStore((s) => s.mode);
+
+  // Dark mode is instructor-only: students are locked to light, admins have
+  // their own fixed dark layout under AdminLayout. Applying the class here
+  // (rather than in the store) keeps that gating close to the UI that reads
+  // the user's role. Reapplying every render is idempotent.
+  useEffect(() => {
+    const root = document.documentElement;
+    const shouldBeDark = profile?.role === "instructor" && mode === "dark";
+    root.classList.toggle("dark", shouldBeDark);
+    return () => root.classList.remove("dark");
+  }, [profile?.role, mode]);
 
   return (
-    <div className="min-h-screen bg-[#f3f2fb] p-2 sm:p-4 lg:p-6">
+    <div className="min-h-screen bg-[#f3f2fb] p-2 dark:bg-ink-950 sm:p-4 lg:p-6">
       <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-[1600px] gap-4 lg:gap-6">
         {/* Desktop icon rail — width lives on this wrapper (not the aside)
             so it's a normal flex sibling: expanding it on hover pushes the

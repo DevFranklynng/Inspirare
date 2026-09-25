@@ -9,7 +9,7 @@ export default function Input({ label, error, type = "text", id, ...props }) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-slate-700">
+        <label htmlFor={inputId} className="text-sm font-medium text-slate-700 dark:text-slate-300">
           {label}
         </label>
       )}
@@ -19,8 +19,8 @@ export default function Input({ label, error, type = "text", id, ...props }) {
           type={isPassword && show ? "text" : type}
           aria-invalid={!!error}
           aria-describedby={error ? `${inputId}-error` : undefined}
-          className={`w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:ring-2 focus:ring-brand-300 ${
-            error ? "border-red-300" : "border-slate-200 focus:border-brand-400"
+          className={`w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:ring-2 focus:ring-brand-300 dark:bg-ink-900 dark:text-slate-100 dark:placeholder:text-slate-500 ${
+            error ? "border-red-300" : "border-slate-200 focus:border-brand-400 dark:border-ink-700"
           } ${isPassword ? "pr-11" : ""}`}
           {...props}
         />
@@ -28,7 +28,7 @@ export default function Input({ label, error, type = "text", id, ...props }) {
           <button
             type="button"
             onClick={() => setShow((s) => !s)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
             aria-label={show ? "Hide password" : "Show password"}
           >
             {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

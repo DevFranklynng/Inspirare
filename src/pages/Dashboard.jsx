@@ -64,24 +64,26 @@ export default function Dashboard() {
         <>
           <InstructorSummary data={data} />
           <Card>
-            <h2 className="mb-4 text-sm font-semibold text-slate-800">Your courses</h2>
+            <h2 className="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Your courses</h2>
             {(!data.courses || data.courses.length === 0) ? (
-              <p className="text-sm text-slate-400">You haven't created any courses yet.</p>
+              <p className="text-sm text-slate-400 dark:text-slate-500">You haven't created any courses yet.</p>
             ) : (
-              <ul className="flex flex-col divide-y divide-slate-100">
+              <ul className="flex flex-col divide-y divide-slate-100 dark:divide-ink-700">
                 {data.courses.map((c) => (
                   <li key={c.course_id} className="flex items-center justify-between gap-3 py-3">
                     <div className="min-w-0">
-                      <Link to={`/courses/${c.course_id}`} className="truncate text-sm font-medium text-slate-800 hover:text-brand-600">
+                      <Link to={`/courses/${c.course_id}`} className="truncate text-sm font-medium text-slate-800 hover:text-brand-600 dark:text-slate-200 dark:hover:text-brand-300">
                         {c.title}
                       </Link>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-slate-400 dark:text-slate-500">
                         {c.enrolled_students ?? 0} students · {c.pending_submissions ?? 0} pending submissions
                       </p>
                     </div>
                     <span
                       className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${
-                        c.is_published ? "bg-green-50 text-green-700" : "bg-slate-100 text-slate-500"
+                        c.is_published
+                          ? "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"
+                          : "bg-slate-100 text-slate-500 dark:bg-ink-700 dark:text-slate-300"
                       }`}
                     >
                       {c.is_published ? "Published" : "Draft"}

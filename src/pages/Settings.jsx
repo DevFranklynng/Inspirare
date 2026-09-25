@@ -32,15 +32,15 @@ export default function Settings() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-900">Settings</h1>
-        <p className="text-sm text-slate-400">Your Inspirare profile.</p>
+        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Settings</h1>
+        <p className="text-sm text-slate-400 dark:text-slate-500">Your Inspirare profile.</p>
       </div>
 
       <Card className="flex items-center gap-4">
         <Avatar name={profile?.full_name} src={profile?.avatar_url} size={56} />
         <div>
-          <p className="text-sm font-semibold text-slate-800">{profile?.full_name}</p>
-          <p className="text-xs capitalize text-slate-400">{profile?.role}</p>
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{profile?.full_name}</p>
+          <p className="text-xs capitalize text-slate-400 dark:text-slate-500">{profile?.role}</p>
         </div>
       </Card>
 
@@ -51,7 +51,7 @@ export default function Settings() {
           </div>
 
           {notice && (
-            <p className={`rounded-lg px-3 py-2 text-sm ${notice.type === "error" ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
+            <p className={`rounded-lg px-3 py-2 text-sm ${notice.type === "error" ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400" : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"}`}>
               {notice.message}
             </p>
           )}
@@ -63,14 +63,14 @@ export default function Settings() {
       </Card>
 
       <Card>
-        <dl className="divide-y divide-slate-100">
+        <dl className="divide-y divide-slate-100 dark:divide-ink-700">
           <div className="flex items-center justify-between py-3 text-sm">
-            <dt className="text-slate-400">Role</dt>
-            <dd className="font-medium capitalize text-slate-700">{profile?.role}</dd>
+            <dt className="text-slate-400 dark:text-slate-500">Role</dt>
+            <dd className="font-medium capitalize text-slate-700 dark:text-slate-300">{profile?.role}</dd>
           </div>
           <div className="flex items-center justify-between py-3 text-sm">
-            <dt className="text-slate-400">Track</dt>
-            <dd className="max-w-xs text-right font-medium text-slate-700">{track}</dd>
+            <dt className="text-slate-400 dark:text-slate-500">Track</dt>
+            <dd className="max-w-xs text-right font-medium text-slate-700 dark:text-slate-300">{track}</dd>
           </div>
         </dl>
       </Card>
