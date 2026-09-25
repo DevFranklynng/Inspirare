@@ -10,13 +10,13 @@ export default function AppLayout() {
   const { profile } = useAuth();
   const mode = useThemeStore((s) => s.mode);
 
-  // Dark mode is instructor-only: students are locked to light, admins have
-  // their own fixed dark layout under AdminLayout. Applying the class here
-  // (rather than in the store) keeps that gating close to the UI that reads
-  // the user's role. Reapplying every render is idempotent.
+  // Light/dark is for students and instructors; admins keep their own fixed
+  // dark layout under AdminLayout (no toggle). Applying the class here (rather
+  // than in the store) keeps that gating close to the UI that reads the user's
+  // role. Reapplying every render is idempotent.
   useEffect(() => {
     const root = document.documentElement;
-    const shouldBeDark = profile?.role === "instructor" && mode === "dark";
+    const shouldBeDark = profile?.role !== "admin" && mode === "dark";
     root.classList.toggle("dark", shouldBeDark);
     return () => root.classList.remove("dark");
   }, [profile?.role, mode]);

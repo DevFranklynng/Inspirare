@@ -4,7 +4,7 @@ import { useThemeStore } from "../../stores/themeStore";
 import Avatar from "../ui/Avatar";
 
 export default function Topbar({ onMenuClick }) {
-  const { profile, isInstructor } = useAuth();
+  const { profile } = useAuth();
   const mode = useThemeStore((s) => s.mode);
   const toggle = useThemeStore((s) => s.toggle);
 
@@ -29,7 +29,7 @@ export default function Topbar({ onMenuClick }) {
       </div>
 
       <div className="flex items-center gap-3">
-        {isInstructor && (
+        {profile?.role !== "admin" && (
           <button
             onClick={toggle}
             className="rounded-full bg-white p-2.5 text-slate-400 shadow-soft hover:text-brand-600 dark:bg-ink-900 dark:text-slate-400 dark:hover:text-brand-300"
