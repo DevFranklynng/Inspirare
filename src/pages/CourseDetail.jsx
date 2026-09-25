@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { fetchCourse, enrollInCourse } from "../api/courses";
+import {
+  fetchCourse,
+  enrollInCourse,
+  updateCourse,
+} from "../api/courses";
 import { completeLesson } from "../api/lessons";
 import { ApiError } from "../api/client";
 import { useAuth } from "../context/AuthContext";
@@ -9,7 +13,33 @@ import ErrorState from "../components/ui/ErrorState";
 import EmptyState from "../components/ui/EmptyState";
 import Button from "../components/ui/Button";
 import ModuleAccordion from "../components/courses/ModuleAccordion";
-import { ArrowLeft, Layers } from "lucide-react";
+import CourseTabs from "../components/instructor/CourseTabs";
+import LessonManager from "../components/instructor/LessonManager";
+import AssignmentManager from "../components/instructor/AssignmentManager";
+import ScheduleManager from "../components/instructor/ScheduleManager";
+import MaterialsManager from "../components/instructor/MaterialsManager";
+import AttendanceManager from "../components/instructor/AttendanceManager";
+import { Field, TextInput, TextArea } from "../components/instructor/Field";
+import {
+  ArrowLeft,
+  Layers,
+  BookOpen,
+  ClipboardList,
+  CalendarDays,
+  FolderOpen,
+  Users,
+  Pencil,
+  X,
+  Check,
+} from "lucide-react";
+
+const instructorTabs = [
+  { id: "lessons", label: "Lessons", icon: BookOpen },
+  { id: "assignments", label: "Assignments", icon: ClipboardList },
+  { id: "schedule", label: "Schedule", icon: CalendarDays },
+  { id: "materials", label: "Materials", icon: FolderOpen },
+  { id: "attendance", label: "Attendance", icon: Users },
+];
 
 export default function CourseDetail() {
   const { id } = useParams();
@@ -18,14 +48,19 @@ export default function CourseDetail() {
   const [course, setCourse] = useState(null);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
-  const [enrolling, setEnrolling] = useState(false);
   const [notice, setNotice] = useState(null);
+  const [enrolling, setEnrolling] = useState(false);
+  const [activeTab, setActiveTab] = useState("lessons");
 
-  // The course-detail endpoint doesn't report which lessons this student has
-  // already completed, so we track completions made during this session
-  // locally and mark them done optimistically as the student clicks through.
+  // Lesson completion is tracked locally (see comment in the student branch).
   const [completedLessonIds, setCompletedLessonIds] = useState(new Set());
   const [completingId, setCompletingId] = useState(null);
+
+  // Inline course-title/description editing (instructors only).
+  const [editingDetails, setEditingDetails] = useState(false);
+  const [draftTitle, setDraftTitle] = useState("");
+  const [draftDescription, setDraftDescription] = useState("");
+  const [savingDetails, setSavingDetails] = useState(false);
 
   const load = useCallback(async () => {
     setStatus("loading");
@@ -51,15 +86,34 @@ export default function CourseDetail() {
       await enrollInCourse(id);
       setCourse((c) => ({ ...c, is_enrolled: true }));
     } catch (err) {
-      // A 409 means the student is already enrolled (this course or
-      // another — one course at a time is allowed), so show the backend's
-      // message rather than assuming this course flipped to enrolled.
       setNotice({
         type: "error",
         message: err instanceof ApiError ? err.message : "Enrollment failed.",
       });
     } finally {
       setEnrolling(false);
+    }
+  }
+
+  async function handleSaveDetails() {
+    if (!draftTitle.trim()) return;
+    setSavingDetails(true);
+    setNotice(null);
+    try {
+      const updated = await updateCourse(id, {
+        title: draftTitle.trim(),
+        description: draftDescription.trim() || null,
+      });
+      setCourse((c) => ({ ...c, ...updated }));
+      setEditingDetails(false);
+      setNotice({ type: "success", message: "Course details updated." });
+    } catch (err) {
+      setNotice({
+        type: "error",
+        message: err instanceof ApiError ? err.message : "Couldn't update the course.",
+      });
+    } finally {
+      setSavingDetails(false);
     }
   }
 
@@ -82,49 +136,130 @@ export default function CourseDetail() {
 
   return (
     <div className="flex flex-col gap-5">
-      <Link to="/courses" className="flex w-fit items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600">
+      <Link
+        to="/courses"
+        className="flex w-fit items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400"
+      >
         <ArrowLeft className="h-4 w-4" />
         Back to courses
       </Link>
 
-      <div className="flex flex-col gap-3 rounded-xl3 bg-white p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold text-slate-900">{course.title}</h1>
-          {course.description && <p className="mt-1 max-w-2xl text-sm text-slate-500">{course.description}</p>}
-        </div>
-        {!isInstructor && course.is_enrolled === false && (
-          <Button isLoading={enrolling} loadingText="Enrolling…" onClick={handleEnroll} className="shrink-0">
-            Enroll in this course
-          </Button>
+      <div className="flex flex-col gap-3 rounded-xl3 bg-white p-5 shadow-soft dark:bg-ink-900 dark:border dark:border-ink-700 sm:flex-row sm:items-center sm:justify-between">
+        {isInstructor && editingDetails ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSaveDetails();
+            }}
+            className="flex w-full flex-col gap-3"
+          >
+            <Field label="Course title">
+              <TextInput value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} autoFocus />
+            </Field>
+            <Field label="Description">
+              <TextArea value={draftDescription} onChange={(e) => setDraftDescription(e.target.value)} rows={2} />
+            </Field>
+            <div className="flex items-center gap-2">
+              <Button type="submit" variant="primary" className="px-3 py-1.5 text-xs" isLoading={savingDetails} loadingText="Saving…">
+                <Check className="h-3.5 w-3.5" /> Save details
+              </Button>
+              <Button
+                variant="ghost"
+                className="px-3 py-1.5 text-xs"
+                onClick={() => {
+                  setEditingDetails(false);
+                  setNotice(null);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">{course.title}</h1>
+              {course.description && (
+                <p className="mt-1 max-w-2xl text-sm text-slate-500 dark:text-slate-400">{course.description}</p>
+              )}
+            </div>
+            <div className="flex shrink-0 items-center gap-3">
+              {isInstructor && (
+                <Button
+                  variant="ghost"
+                  className="px-3 py-2 text-xs"
+                  onClick={() => {
+                    setDraftTitle(course.title);
+                    setDraftDescription(course.description || "");
+                    setEditingDetails(true);
+                  }}
+                >
+                  <Pencil className="h-3.5 w-3.5" /> Edit
+                </Button>
+              )}
+              {!isInstructor && course.is_enrolled === false && (
+                <Button isLoading={enrolling} loadingText="Enrolling…" onClick={handleEnroll} className="shrink-0">
+                  Enroll in this course
+                </Button>
+              )}
+            </div>
+          </>
         )}
       </div>
 
       {notice && (
-        <p className={`rounded-lg px-3 py-2 text-sm ${notice.type === "error" ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700"}`}>
+        <p
+          className={`rounded-lg px-3 py-2 text-sm ${
+            notice.type === "error"
+              ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400"
+              : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"
+          }`}
+        >
           {notice.message}
         </p>
       )}
 
-      <div className="flex flex-col gap-3">
-        <h2 className="text-sm font-semibold text-slate-800">Modules</h2>
-        {(!course.modules || course.modules.length === 0) ? (
-          <EmptyState icon={Layers} title="No modules yet" description="Modules and lessons will appear here once added." />
-        ) : (
-          course.modules
-            .slice()
-            .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-            .map((module) => (
-              <ModuleAccordion
-                key={module.id}
-                module={module}
-                completedLessonIds={completedLessonIds}
-                onCompleteLesson={handleCompleteLesson}
-                completingId={completingId}
-                canComplete={canComplete}
-              />
-            ))
-        )}
-      </div>
+      {isInstructor ? (
+        <>
+          <CourseTabs tabs={instructorTabs} active={activeTab} onChange={setActiveTab} />
+
+          {activeTab === "lessons" && (
+            <LessonManager
+              courseId={course.id}
+              modules={course.modules || []}
+              onChanged={load}
+              onError={(message, successMessage) =>
+                setNotice({ type: successMessage ? "success" : "error", message: message || successMessage })
+              }
+            />
+          )}
+          {activeTab === "assignments" && <AssignmentManager courseId={course.id} />}
+          {activeTab === "schedule" && <ScheduleManager courseId={course.id} />}
+          {activeTab === "materials" && <MaterialsManager courseId={course.id} />}
+          {activeTab === "attendance" && <AttendanceManager courseId={course.id} />}
+        </>
+      ) : (
+        <div className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Modules</h2>
+          {!course.modules || course.modules.length === 0 ? (
+            <EmptyState icon={Layers} title="No modules yet" description="Modules and lessons will appear here once added." />
+          ) : (
+            course.modules
+              .slice()
+              .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+              .map((module) => (
+                <ModuleAccordion
+                  key={module.id}
+                  module={module}
+                  completedLessonIds={completedLessonIds}
+                  onCompleteLesson={handleCompleteLesson}
+                  completingId={completingId}
+                  canComplete={canComplete}
+                />
+              ))
+          )}
+        </div>
+      )}
     </div>
   );
 }

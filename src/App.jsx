@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { CalendarDays, FolderOpen, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { AuthProvider } from "./context/AuthContext";
 import { RequireAuth, RedirectIfAuthenticated } from "./components/auth/AuthGuard";
 import BlockAdminFromAppArea from "./components/auth/BlockAdminFromAppArea";
@@ -14,6 +14,8 @@ import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import Assignments from "./pages/Assignments";
+import Schedule from "./pages/Schedule";
+import Materials from "./pages/Materials";
 import Settings from "./pages/Settings";
 import Placeholder from "./pages/Placeholder";
 import Unauthorized from "./pages/Unauthorized";
@@ -51,14 +53,8 @@ export default function App() {
                 <Route path="/courses" element={withBoundary(<Courses />)} />
                 <Route path="/courses/:id" element={withBoundary(<CourseDetail />)} />
                 <Route path="/assignments" element={withBoundary(<Assignments />)} />
-                <Route
-                  path="/schedule"
-                  element={<Placeholder icon={CalendarDays} title="Schedule" description="Your class schedule will live here once the API supports it." />}
-                />
-                <Route
-                  path="/materials"
-                  element={<Placeholder icon={FolderOpen} title="Materials" description="Downloadable course materials will live here." />}
-                />
+                <Route path="/schedule" element={withBoundary(<Schedule />)} />
+                <Route path="/materials" element={withBoundary(<Materials />)} />
                 <Route
                   path="/forum"
                   element={<Placeholder icon={MessageSquare} title="Forum" description="Course discussion will live here." />}
