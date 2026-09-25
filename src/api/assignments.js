@@ -16,3 +16,20 @@ export async function gradeSubmission(submissionId, { score, feedback }) {
   });
   return data.grade;
 }
+
+export async function listSubmissions(assignmentId) {
+  const data = await request(`/assignments/${assignmentId}/submissions`);
+  return data.submissions;
+}
+
+export async function updateAssignment(assignmentId, patch) {
+  const data = await request(`/assignments/${assignmentId}`, {
+    method: "PATCH",
+    body: patch,
+  });
+  return data.assignment;
+}
+
+export async function deleteAssignment(assignmentId) {
+  return request(`/assignments/${assignmentId}`, { method: "DELETE" });
+}

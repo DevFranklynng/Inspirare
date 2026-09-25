@@ -51,3 +51,28 @@ export async function createAssignment(courseId, { title, description, dueDate, 
   });
   return data.assignment;
 }
+
+export async function updateModule(moduleId, patch) {
+  const data = await request(`/modules/${moduleId}`, {
+    method: "PATCH",
+    body: patch,
+  });
+  return data.module;
+}
+
+export async function deleteModule(moduleId) {
+  return request(`/modules/${moduleId}`, { method: "DELETE" });
+}
+
+// Instructor-only. The course-detail endpoint (fetchCourse) doesn't carry
+// assignments, so listing them is a separate call.
+export async function fetchCourseAssignments(courseId) {
+  const data = await request(`/courses/${courseId}/assignments`);
+  return data.assignments;
+}
+
+// Instructor-only roster of the students enrolled in a course.
+export async function fetchCourseStudents(courseId) {
+  const data = await request(`/courses/${courseId}/students`);
+  return data.students;
+}

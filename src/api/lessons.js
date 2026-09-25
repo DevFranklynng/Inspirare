@@ -8,6 +8,18 @@ export async function createLesson(moduleId, { title, videoUrl, notes, orderInde
   return data.lesson;
 }
 
+export async function updateLesson(lessonId, patch) {
+  const data = await request(`/lessons/${lessonId}`, {
+    method: "PATCH",
+    body: patch,
+  });
+  return data.lesson;
+}
+
+export async function deleteLesson(lessonId) {
+  return request(`/lessons/${lessonId}`, { method: "DELETE" });
+}
+
 // Upserts, so calling it more than once is harmless -- safe to call
 // optimistically from the UI.
 export async function completeLesson(lessonId) {
