@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { fetchDashboard } from "../api/dashboard";
+import { fetchCourseAssignments } from "../api/courses";
 import { submitAssignment } from "../api/assignments";
 import { ApiError } from "../api/client";
 import LoadingState from "../components/ui/LoadingState";
@@ -9,13 +10,16 @@ import EmptyState from "../components/ui/EmptyState";
 import AssignmentCard from "../components/assignments/AssignmentCard";
 import AssignmentManager from "../components/instructor/AssignmentManager";
 import CourseScopedManager from "../components/instructor/CourseScopedManager";
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, BookOpen } from "lucide-react";
 
-// Students see the work due across their enrolled course; instructors get the
-// full course-scoped management panel (create, edit, grade).
+// Students see every assignment across their enrolled course(s), pulled from
+// the real per-course endpoint (so description/max_score are available, not
+// just the trimmed "still due" shape the dashboard summary carries).
+// Instructors get the full course-scoped management panel (create, edit, grade).
 
 function StudentAssignments() {
   const [assignments, setAssignments] = useState([]);
+  const [hasEnrolledCourse, setHasEnrolledCourse] = useState(true);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [submittingId, setSubmittingId] = useState(null);
@@ -26,7 +30,23 @@ function StudentAssignments() {
     setError(null);
     try {
       const dashboard = await fetchDashboard();
-      setAssignments(dashboard.upcoming_assignments || []);
+      const enrolledCourses = dashboard.enrolled_courses || [];
+      setHasEnrolledCourse(enrolledCourses.length > 0);
+
+      const perCourse = await Promise.all(
+        enrolledCourses.map(async (c) => {
+          const courseAssignments = await fetchCourseAssignments(c.course_id);
+          return (courseAssignments || []).map((a) => ({ ...a, course_title: c.title }));
+        })
+      );
+
+      const merged = perCourse.flat().sort((a, b) => {
+        if (!a.due_date) return 1;
+        if (!b.due_date) return -1;
+        return new Date(a.due_date) - new Date(b.due_date);
+      });
+
+      setAssignments(merged);
       setStatus("success");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "We couldn't load your assignments.");
@@ -60,17 +80,20 @@ function StudentAssignments() {
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Assignments</h1>
-        <p className="text-sm text-slate-400 dark:text-slate-500">Upcoming work across your enrolled courses.</p>
+        <p className="text-sm text-slate-400 dark:text-slate-500">Work assigned across your enrolled courses.</p>
       </div>
 
-      {assignments.length === 0 ? (
-        <EmptyState icon={ClipboardList} title="Nothing due" description="Upcoming assignments will show up here." />
+      {!hasEnrolledCourse ? (
+        <EmptyState icon={BookOpen} title="You're not enrolled in a course yet" description="Enroll in a course to see its assignments here." />
+      ) : assignments.length === 0 ? (
+        <EmptyState icon={ClipboardList} title="No assignments yet" description="Assignments your instructor posts will show up here." />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {assignments.map((a) => (
             <AssignmentCard
               key={a.id}
               assignment={a}
+              courseTitle={a.course_title}
               onSubmit={handleSubmit}
               isSubmitting={submittingId === a.id}
               result={results[a.id]}

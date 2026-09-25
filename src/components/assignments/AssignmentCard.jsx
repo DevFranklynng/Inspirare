@@ -1,16 +1,13 @@
 import { useState } from "react";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
+import { formatDueLabel } from "../../utils/datetime";
 
-function formatDue(dateStr) {
-  if (!dateStr) return "No due date";
-  return new Date(dateStr).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-}
-
-export default function AssignmentCard({ assignment, onSubmit, isSubmitting, result }) {
+export default function AssignmentCard({ assignment, onSubmit, isSubmitting, result, courseTitle }) {
   const [expanded, setExpanded] = useState(false);
   const [content, setContent] = useState("");
   const [fileUrl, setFileUrl] = useState("");
+  const due = formatDueLabel(assignment.due_date);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,8 +20,26 @@ export default function AssignmentCard({ assignment, onSubmit, isSubmitting, res
     <Card>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-200">{assignment.title}</p>
-          <p className="text-xs text-slate-400 dark:text-slate-500">Due {formatDue(assignment.due_date)}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            {courseTitle && (
+              <span className="truncate rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-500 dark:bg-ink-700 dark:text-slate-400">
+                {courseTitle}
+              </span>
+            )}
+            {assignment.max_score != null && (
+              <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+                {assignment.max_score} pts
+              </span>
+            )}
+          </div>
+          <p className="mt-1 truncate text-sm font-semibold text-slate-800 dark:text-slate-200">{assignment.title}</p>
+          {assignment.description && (
+            <p className="mt-1 line-clamp-2 text-xs text-slate-500 dark:text-slate-400">{assignment.description}</p>
+          )}
+          <p className={`mt-1 text-xs ${due.overdue ? "font-medium text-red-500 dark:text-red-400" : "text-slate-400 dark:text-slate-500"}`}>
+            Due {due.label}
+            {due.overdue ? " · Overdue" : ""}
+          </p>
         </div>
         <Button variant="secondary" className="shrink-0 px-3 py-1.5 text-xs" onClick={() => setExpanded((e) => !e)}>
           {expanded ? "Cancel" : "Submit"}

@@ -9,6 +9,8 @@ import QuickLinksCard from "../components/dashboard/QuickLinksCard";
 import ProgressCard from "../components/dashboard/ProgressCard";
 import UpcomingAssignments from "../components/dashboard/UpcomingAssignments";
 import PerformanceCard from "../components/dashboard/PerformanceCard";
+import UpcomingClasses from "../components/dashboard/UpcomingClasses";
+import RecentMaterials from "../components/dashboard/RecentMaterials";
 import InstructorSummary from "../components/dashboard/InstructorSummary";
 import Card from "../components/ui/Card";
 import { Link } from "react-router-dom";
@@ -103,6 +105,13 @@ export default function Dashboard() {
           <div className="lg:col-span-2">
             <UpcomingAssignments assignments={data.upcoming_assignments} />
           </div>
+        </div>
+      )}
+
+      {!isInstructor && (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
+          <UpcomingClasses courses={data.enrolled_courses} />
+          <RecentMaterials courses={data.enrolled_courses} />
         </div>
       )}
     </div>

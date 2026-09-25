@@ -19,6 +19,9 @@ import AssignmentManager from "../components/instructor/AssignmentManager";
 import ScheduleManager from "../components/instructor/ScheduleManager";
 import MaterialsManager from "../components/instructor/MaterialsManager";
 import AttendanceManager from "../components/instructor/AttendanceManager";
+import StudentAssignmentsPanel from "../components/student/StudentAssignmentsPanel";
+import StudentSchedulePanel from "../components/student/StudentSchedulePanel";
+import StudentMaterialsPanel from "../components/student/StudentMaterialsPanel";
 import { Field, TextInput, TextArea } from "../components/instructor/Field";
 import {
   ArrowLeft,
@@ -39,6 +42,13 @@ const instructorTabs = [
   { id: "schedule", label: "Schedule", icon: CalendarDays },
   { id: "materials", label: "Materials", icon: FolderOpen },
   { id: "attendance", label: "Attendance", icon: Users },
+];
+
+const studentTabs = [
+  { id: "lessons", label: "Lessons", icon: BookOpen },
+  { id: "assignments", label: "Assignments", icon: ClipboardList },
+  { id: "schedule", label: "Schedule", icon: CalendarDays },
+  { id: "materials", label: "Materials", icon: FolderOpen },
 ];
 
 export default function CourseDetail() {
@@ -239,26 +249,40 @@ export default function CourseDetail() {
           {activeTab === "attendance" && <AttendanceManager courseId={course.id} />}
         </>
       ) : (
-        <div className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Modules</h2>
-          {!course.modules || course.modules.length === 0 ? (
-            <EmptyState icon={Layers} title="No modules yet" description="Modules and lessons will appear here once added." />
-          ) : (
-            course.modules
-              .slice()
-              .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-              .map((module) => (
-                <ModuleAccordion
-                  key={module.id}
-                  module={module}
-                  completedLessonIds={completedLessonIds}
-                  onCompleteLesson={handleCompleteLesson}
-                  completingId={completingId}
-                  canComplete={canComplete}
-                />
-              ))
+        <>
+          <CourseTabs tabs={studentTabs} active={activeTab} onChange={setActiveTab} />
+
+          {activeTab === "lessons" && (
+            <div className="flex flex-col gap-3">
+              {!course.modules || course.modules.length === 0 ? (
+                <EmptyState icon={Layers} title="No modules yet" description="Modules and lessons will appear here once added." />
+              ) : (
+                course.modules
+                  .slice()
+                  .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+                  .map((module) => (
+                    <ModuleAccordion
+                      key={module.id}
+                      module={module}
+                      completedLessonIds={completedLessonIds}
+                      onCompleteLesson={handleCompleteLesson}
+                      completingId={completingId}
+                      canComplete={canComplete}
+                    />
+                  ))
+              )}
+            </div>
           )}
-        </div>
+          {activeTab === "assignments" && (
+            <StudentAssignmentsPanel courseId={course.id} onEnroll={handleEnroll} enrolling={enrolling} />
+          )}
+          {activeTab === "schedule" && (
+            <StudentSchedulePanel courseId={course.id} onEnroll={handleEnroll} enrolling={enrolling} />
+          )}
+          {activeTab === "materials" && (
+            <StudentMaterialsPanel courseId={course.id} onEnroll={handleEnroll} enrolling={enrolling} />
+          )}
+        </>
       )}
     </div>
   );
