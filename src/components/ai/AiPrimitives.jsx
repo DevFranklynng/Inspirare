@@ -54,8 +54,10 @@ export function AiUnavailableBanner({ status }) {
 }
 
 /**
- * Slim provider chip for page headers: the live model, plus whether the local
- * provider is actually up and whether that model has been pulled.
+ * Slim provider chip for page headers: the configured model, plus whether the
+ * provider is actually reachable and whether the credential is accepted.
+ * Wording stays provider-neutral so it reads correctly for OpenRouter (a hosted
+ * API), a generic gateway, and a local runtime alike.
  */
 export function AiProviderChip({ status }) {
   if (!status) return null;
@@ -68,8 +70,9 @@ export function AiProviderChip({ status }) {
     <AiPill kind={kind}>
       <Icon className="h-3.5 w-3.5" />
       {status.model || "AI"}
-      {unreachable && <span className="font-normal">· not running</span>}
-      {status.model_installed === false && <span className="font-normal">· model not pulled</span>}
+      {unreachable && <span className="font-normal">· unreachable</span>}
+      {status.key_valid === false && <span className="font-normal">· key rejected</span>}
+      {status.model_installed === false && <span className="font-normal">· model not available</span>}
     </AiPill>
   );
 }
