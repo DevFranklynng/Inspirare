@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/ui/Card";
 import Avatar from "../components/ui/Avatar";
@@ -60,6 +61,21 @@ export default function Settings() {
             Save name
           </Button>
         </form>
+      </Card>
+
+      <Card>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">Password</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">Set a new password for your account.</p>
+          </div>
+          <Link
+            to="/change-password"
+            className="shrink-0 text-sm font-semibold text-brand-700 hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200"
+          >
+            Change password
+          </Link>
+        </div>
       </Card>
 
       <Card>

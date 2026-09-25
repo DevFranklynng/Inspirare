@@ -28,6 +28,7 @@ const studentNav = [
 const instructorNav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/courses", label: "Courses", icon: BookOpen },
+  { to: "/forum", label: "Forum", icon: MessageSquare },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 

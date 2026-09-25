@@ -58,6 +58,13 @@ export const useAuthStore = create((set) => ({
     set({ profile: updated });
     return updated;
   },
+
+  changePassword: async ({ password }) => {
+    await authApi.changePassword({ password });
+    const me = await authApi.fetchMe();
+    set({ profile: me });
+    return me;
+  },
 }));
 
 // A 401 from any request clears the session, wherever in the app it

@@ -41,3 +41,16 @@ export async function updateMe({ fullName }) {
 export function logout() {
   clearSession();
 }
+
+// Students, instructors and admins can all change their own password here.
+// This route is deliberately reachable while the forced-password gate is
+// active (it is not mounted behind the API's passwordGate middleware), so a
+// user whose account was created by an admin can set their own password to
+// clear profiles.must_change_password and continue into the app.
+export async function changePassword({ password }) {
+  const data = await request("/auth/change-password", {
+    method: "POST",
+    body: { password },
+  });
+  return data;
+}

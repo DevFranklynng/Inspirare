@@ -23,6 +23,7 @@ export function useAuth() {
   const register = useAuthStore((s) => s.register);
   const logout = useAuthStore((s) => s.logout);
   const updateProfile = useAuthStore((s) => s.updateProfile);
+  const changePassword = useAuthStore((s) => s.changePassword);
 
   return {
     profile,
@@ -35,5 +36,6 @@ export function useAuth() {
     register,
     logout,
     updateProfile,
+    changePassword,
   };
 }
