@@ -66,7 +66,7 @@ export default function Dashboard() {
           <Card>
             <h2 className="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Your courses</h2>
             {(!data.courses || data.courses.length === 0) ? (
-              <p className="text-sm text-slate-400 dark:text-slate-500">You haven't created any courses yet.</p>
+              <p className="text-sm text-slate-400 dark:text-slate-500">No courses assigned to you yet.</p>
             ) : (
               <ul className="flex flex-col divide-y divide-slate-100 dark:divide-ink-700">
                 {data.courses.map((c) => (

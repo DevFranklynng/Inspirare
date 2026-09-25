@@ -74,7 +74,7 @@ export default function Courses() {
         <EmptyState
           icon={BookOpen}
           title={isInstructor ? "No courses yet" : "No published courses yet"}
-          description={isInstructor ? "Courses you create will show up here." : "Check back soon — new courses will appear here."}
+          description={isInstructor ? "Courses assigned to you will show up here." : "Check back soon — new courses will appear here."}
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

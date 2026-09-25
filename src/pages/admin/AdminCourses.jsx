@@ -41,6 +41,50 @@ export default function AdminCourses() {
   const [isCreating, setIsCreating] = useState(false);
   const [publishingId, setPublishingId] = useState(null);
 
+  // Per-row instructor reassignment. Backend PATCH /admin/courses/:id already
+  // accepts instructor_id, so this just wires a control into the existing row.
+  const [reassigningId, setReassigningId] = useState(null);
+  const [reassignForm, setReassignForm] = useState({ instructorId: "" });
+  const [reassignErrors, setReassignErrors] = useState({});
+  const [reassignNotice, setReassignNotice] = useState(null);
+  const [isReassigning, setIsReassigning] = useState(false);
+
+  const openReassign = useCallback(
+    (course) => {
+      setReassigningId(course.id);
+      setReassignForm({ instructorId: course.instructor_id || "" });
+      setReassignErrors({});
+      setReassignNotice(null);
+    },
+    []
+  );
+
+  async function handleReassignCourse(e) {
+    e.preventDefault();
+    if (isReassigning) return;
+
+    if (!reassignForm.instructorId) {
+      setReassignErrors({ instructorId: "Choose the instructor for this course." });
+      return;
+    }
+
+    setReassignNotice(null);
+    setIsReassigning(true);
+    try {
+      await updateCourse(reassigningId, { instructor_id: reassignForm.instructorId });
+      setReassignNotice({ type: "success", message: "Instructor updated." });
+      setReassigningId(null);
+      load();
+    } catch (err) {
+      setReassignNotice({
+        type: "error",
+        message: err instanceof ApiError ? err.message : "Couldn't update the instructor. Please try again.",
+      });
+    } finally {
+      setIsReassigning(false);
+    }
+  }
+
   const load = useCallback(async () => {
     setStatus("loading");
     setError(null);
