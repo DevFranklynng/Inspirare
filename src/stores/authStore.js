@@ -59,8 +59,19 @@ export const useAuthStore = create((set) => ({
     return updated;
   },
 
+  // The old session is dead once the password changes, so the API hands back a
+  // fresh one (see api/auth.js). If it couldn't, drop to unauthenticated and
+  // let the router send the user to sign in with their new password rather
+  // than keep a token that will 401 on every following request.
   changePassword: async ({ password }) => {
-    await authApi.changePassword({ password });
+    const data = await authApi.changePassword({ password });
+
+    if (!data?.session) {
+      clearSession();
+      set({ profile: null, status: "unauthenticated", error: null });
+      return null;
+    }
+
     const me = await authApi.fetchMe();
     set({ profile: me });
     return me;

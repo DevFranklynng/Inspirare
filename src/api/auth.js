@@ -47,10 +47,17 @@ export function logout() {
 // active (it is not mounted behind the API's passwordGate middleware), so a
 // user whose account was created by an admin can set their own password to
 // clear profiles.must_change_password and continue into the app.
+//
+// Changing a password revokes the caller's session, so the API returns a
+// freshly signed-in `session`. It has to be stored here or the next request
+// goes out with a dead token and the app reports an invalid session.
 export async function changePassword({ password }) {
   const data = await request("/auth/change-password", {
     method: "POST",
     body: { password },
   });
+  if (data?.session) {
+    setSession(data.session);
+  }
   return data;
 }
