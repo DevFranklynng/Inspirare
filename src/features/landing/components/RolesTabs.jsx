@@ -13,7 +13,7 @@ const roles = [
     accent: "#8b72f2",
     headline: "Always know what to do next",
     points: [
-      "Enroll in Web Development, the course open right now, and work through it module by module",
+      "Once your admin enrolls you in Web Development, work through it module by module",
       "Mark lessons complete and watch your progress ring fill",
       "Submit assignments with a link, written text, or both",
       "See your most recent grade and feedback on the dashboard",

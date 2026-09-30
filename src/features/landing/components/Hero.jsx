@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import HeroVisual from "./HeroVisual";
 
 const facts = [
-  { value: "Web Dev", label: "the course open for enrollment right now" },
+  { value: "Web Dev", label: "the course your admin assigns you" },
   { value: "3", label: "roles: student, instructor, admin" },
 ];
 

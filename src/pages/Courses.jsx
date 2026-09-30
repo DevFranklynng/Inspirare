@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { fetchCourses, enrollInCourse } from "../api/courses";
+import { fetchCourses } from "../api/courses";
 import { ApiError } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import LoadingState from "../components/ui/LoadingState";
@@ -13,8 +13,6 @@ export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
-  const [enrollingId, setEnrollingId] = useState(null);
-  const [notice, setNotice] = useState(null);
 
   const load = useCallback(async () => {
     setStatus("loading");
@@ -33,25 +31,6 @@ export default function Courses() {
     load();
   }, [load]);
 
-  async function handleEnroll(courseId) {
-    setEnrollingId(courseId);
-    setNotice(null);
-    try {
-      await enrollInCourse(courseId);
-      setCourses((prev) => prev.map((c) => (c.id === courseId ? { ...c, is_enrolled: true } : c)));
-    } catch (err) {
-      // A 409 here means the student is already enrolled (in this course or
-      // another — only one course at a time is allowed), so surface the
-      // backend's message instead of assuming this specific course flipped.
-      setNotice({
-        type: "error",
-        message: err instanceof ApiError ? err.message : "Couldn't enroll. Please try again.",
-      });
-    } finally {
-      setEnrollingId(null);
-    }
-  }
-
   if (status === "loading") return <LoadingState label="Loading courses…" />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
@@ -60,15 +39,11 @@ export default function Courses() {
       <div>
         <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">{isInstructor ? "Your courses" : "Courses"}</h1>
         <p className="text-sm text-slate-400 dark:text-slate-500">
-          {isInstructor ? "Courses you've created." : "Browse published courses and track your enrollment."}
+          {isInstructor
+            ? "Courses you've created."
+            : "An administrator enrolls you in a course — you'll see it here once that happens."}
         </p>
       </div>
-
-      {notice && (
-        <p className={`rounded-lg px-3 py-2 text-sm ${notice.type === "error" ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400" : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"}`}>
-          {notice.message}
-        </p>
-      )}
 
       {courses.length === 0 ? (
         <EmptyState
@@ -79,7 +54,7 @@ export default function Courses() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((course) => (
-            <CourseCard key={course.id} course={course} onEnroll={handleEnroll} enrolling={enrollingId === course.id} />
+            <CourseCard key={course.id} course={course} />
           ))}
         </div>
       )}

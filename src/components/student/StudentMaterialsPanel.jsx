@@ -6,9 +6,8 @@ import MaterialItem from "../materials/MaterialItem";
 import LoadingState from "../ui/LoadingState";
 import ErrorState from "../ui/ErrorState";
 import EmptyState from "../ui/EmptyState";
-import Button from "../ui/Button";
 
-export default function StudentMaterialsPanel({ courseId, onEnroll, enrolling }) {
+export default function StudentMaterialsPanel({ courseId }) {
   const [materials, setMaterials] = useState([]);
   const [status, setStatus] = useState("loading"); // loading | success | error | locked
   const [error, setError] = useState(null);
@@ -41,9 +40,8 @@ export default function StudentMaterialsPanel({ courseId, onEnroll, enrolling })
     return (
       <EmptyState
         icon={Lock}
-        title="Enroll to see materials"
-        description="Course materials are only visible to students enrolled in this course."
-        action={onEnroll && <Button isLoading={enrolling} loadingText="Enrolling…" onClick={onEnroll}>Enroll in this course</Button>}
+        title="Not enrolled in this course"
+        description="Course materials are only visible to students an administrator has enrolled. Ask your administrator to enroll you."
       />
     );
   }

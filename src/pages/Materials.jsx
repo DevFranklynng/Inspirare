@@ -65,7 +65,7 @@ function StudentMaterials() {
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Materials</h1>
           <p className="text-sm text-slate-400 dark:text-slate-500">Your course materials will show up here.</p>
         </div>
-        <EmptyState icon={BookOpen} title="You're not enrolled in a course yet" description="Enroll in a course to see its materials here." />
+        <EmptyState icon={BookOpen} title="You're not enrolled in a course yet" description="An administrator enrolls you in a course. Once they have, your materials show up here." />
       </div>
     );
   }

@@ -7,9 +7,8 @@ import AssignmentCard from "../assignments/AssignmentCard";
 import LoadingState from "../ui/LoadingState";
 import ErrorState from "../ui/ErrorState";
 import EmptyState from "../ui/EmptyState";
-import Button from "../ui/Button";
 
-export default function StudentAssignmentsPanel({ courseId, onEnroll, enrolling }) {
+export default function StudentAssignmentsPanel({ courseId }) {
   const [assignments, setAssignments] = useState([]);
   const [status, setStatus] = useState("loading"); // loading | success | error | locked
   const [error, setError] = useState(null);
@@ -59,9 +58,8 @@ export default function StudentAssignmentsPanel({ courseId, onEnroll, enrolling 
     return (
       <EmptyState
         icon={Lock}
-        title="Enroll to see assignments"
-        description="Assignments are only visible to students enrolled in this course."
-        action={onEnroll && <Button isLoading={enrolling} loadingText="Enrolling…" onClick={onEnroll}>Enroll in this course</Button>}
+        title="Not enrolled in this course"
+        description="Assignments are only visible to students an administrator has enrolled. Ask your administrator to enroll you."
       />
     );
   }

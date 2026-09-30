@@ -16,7 +16,7 @@ export default function ProgressCard({ courses }) {
         <EmptyState
           icon={BookOpen}
           title="No enrolled courses yet"
-          description="Enroll in a course to start tracking your lesson progress here."
+          description="Once an administrator enrolls you in a course, your lesson progress shows up here."
         />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">

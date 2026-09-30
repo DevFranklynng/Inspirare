@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { BookOpen, CheckCircle2 } from "lucide-react";
+import { BookOpen, CheckCircle2, Clock } from "lucide-react";
 import Card from "../ui/Card";
-import Button from "../ui/Button";
-import { ProgressBar } from "../ui/Progress";
 
-export default function CourseCard({ course, onEnroll, enrolling }) {
+export default function CourseCard({ course }) {
   const { id, title, description, is_published, is_enrolled } = course;
 
   return (
@@ -34,15 +32,10 @@ export default function CourseCard({ course, onEnroll, enrolling }) {
               Enrolled
             </span>
           ) : (
-            <Button
-              variant="secondary"
-              className="px-3 py-1.5 text-xs"
-              isLoading={enrolling}
-              loadingText="Enrolling…"
-              onClick={() => onEnroll(id)}
-            >
-              Enroll
-            </Button>
+            <span className="flex items-center gap-1 text-xs font-medium text-slate-400 dark:text-slate-500">
+              <Clock className="h-3.5 w-3.5" />
+              Awaiting enrollment
+            </span>
           )
         )}
       </div>

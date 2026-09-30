@@ -58,7 +58,7 @@ function StudentSchedule() {
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Schedule</h1>
           <p className="text-sm text-slate-400 dark:text-slate-500">Your live classes will show up here.</p>
         </div>
-        <EmptyState icon={BookOpen} title="You're not enrolled in a course yet" description="Enroll in a course to see its class schedule here." />
+        <EmptyState icon={BookOpen} title="You're not enrolled in a course yet" description="An administrator enrolls you in a course. Once they have, your class schedule shows up here." />
       </div>
     );
   }

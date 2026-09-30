@@ -12,7 +12,7 @@ const features = [
   {
     icon: BookOpen,
     title: "Web Development",
-    text: "The course currently open for enrollment — enroll and start with module one.",
+    text: "The one course available right now — your admin enrolls you and you start with module one.",
     from: "#ff6b9d",
     to: "#e8467c",
     glow: "0 18px 28px -14px rgba(232,70,124,0.65)",

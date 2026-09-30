@@ -84,7 +84,7 @@ function StudentAssignments() {
       </div>
 
       {!hasEnrolledCourse ? (
-        <EmptyState icon={BookOpen} title="You're not enrolled in a course yet" description="Enroll in a course to see its assignments here." />
+        <EmptyState icon={BookOpen} title="You're not enrolled in a course yet" description="An administrator enrolls you in a course. Once they have, your assignments show up here." />
       ) : assignments.length === 0 ? (
         <EmptyState icon={ClipboardList} title="No assignments yet" description="Assignments your instructor posts will show up here." />
       ) : (

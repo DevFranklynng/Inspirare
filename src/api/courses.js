@@ -26,10 +26,9 @@ export async function updateCourse(id, patch) {
   return data.course;
 }
 
-export async function enrollInCourse(id) {
-  const data = await request(`/courses/${id}/enroll`, { method: "POST" });
-  return data.enrollment;
-}
+// Students cannot enroll themselves — that is an admin action
+// (enrollStudent in api/admin.js). `is_enrolled` on a course is read-only
+// for students and simply reports whether an admin has enrolled them.
 
 export async function createModule(courseId, { title, orderIndex = 0 }) {
   const data = await request(`/courses/${courseId}/modules`, {

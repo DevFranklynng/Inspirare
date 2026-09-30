@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import {
-  fetchCourse,
-  enrollInCourse,
-  updateCourse,
-} from "../api/courses";
+import { fetchCourse, updateCourse } from "../api/courses";
 import { completeLesson } from "../api/lessons";
 import { ApiError } from "../api/client";
 import { useAuth } from "../context/AuthContext";
@@ -59,7 +55,6 @@ export default function CourseDetail() {
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
-  const [enrolling, setEnrolling] = useState(false);
   const [activeTab, setActiveTab] = useState("lessons");
 
   // Lesson completion is tracked locally (see comment in the student branch).
@@ -88,22 +83,6 @@ export default function CourseDetail() {
   useEffect(() => {
     load();
   }, [load]);
-
-  async function handleEnroll() {
-    setEnrolling(true);
-    setNotice(null);
-    try {
-      await enrollInCourse(id);
-      setCourse((c) => ({ ...c, is_enrolled: true }));
-    } catch (err) {
-      setNotice({
-        type: "error",
-        message: err instanceof ApiError ? err.message : "Enrollment failed.",
-      });
-    } finally {
-      setEnrolling(false);
-    }
-  }
 
   async function handleSaveDetails() {
     if (!draftTitle.trim()) return;
@@ -208,9 +187,9 @@ export default function CourseDetail() {
                 </Button>
               )}
               {!isInstructor && course.is_enrolled === false && (
-                <Button isLoading={enrolling} loadingText="Enrolling…" onClick={handleEnroll} className="shrink-0">
-                  Enroll in this course
-                </Button>
+                <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500 dark:bg-ink-700 dark:text-slate-300">
+                  Not enrolled — an administrator needs to enroll you
+                </span>
               )}
             </div>
           </>
@@ -273,15 +252,9 @@ export default function CourseDetail() {
               )}
             </div>
           )}
-          {activeTab === "assignments" && (
-            <StudentAssignmentsPanel courseId={course.id} onEnroll={handleEnroll} enrolling={enrolling} />
-          )}
-          {activeTab === "schedule" && (
-            <StudentSchedulePanel courseId={course.id} onEnroll={handleEnroll} enrolling={enrolling} />
-          )}
-          {activeTab === "materials" && (
-            <StudentMaterialsPanel courseId={course.id} onEnroll={handleEnroll} enrolling={enrolling} />
-          )}
+          {activeTab === "assignments" && <StudentAssignmentsPanel courseId={course.id} />}
+          {activeTab === "schedule" && <StudentSchedulePanel courseId={course.id} />}
+          {activeTab === "materials" && <StudentMaterialsPanel courseId={course.id} />}
         </>
       )}
     </div>

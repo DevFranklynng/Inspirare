@@ -1,7 +1,7 @@
 // A genuine sequence, so numbered markers are meaningful here.
 const steps = [
   { title: "Get your account", text: "Your admin creates your account and hands you your sign-in details." },
-  { title: "Enroll in Web Development", text: "It's the one course open for enrollment right now." },
+  { title: "Wait to be enrolled", text: "Your admin adds you to Web Development, the one course running right now." },
   { title: "Learn and submit", text: "Complete lessons and send in assignments before they're due." },
   { title: "See your progress", text: "Track completion and read feedback on every graded submission." },
 ];
