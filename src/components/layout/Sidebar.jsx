@@ -10,8 +10,6 @@ import {
   GraduationCap,
   LogOut,
   X,
-  Sparkles,
-  Bot,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -20,7 +18,6 @@ import { useAuth } from "../../context/AuthContext";
 const studentNav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/courses", label: "Courses", icon: BookOpen },
-  { to: "/tutor", label: "AI Tutor", icon: Bot },
   { to: "/schedule", label: "Schedule", icon: CalendarDays },
   { to: "/materials", label: "Materials", icon: FolderOpen },
   { to: "/forum", label: "Forum", icon: MessageSquare },
@@ -28,13 +25,9 @@ const studentNav = [
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
-// Instructors get the authoring workspace instead of the student tutor entry —
-// the backend also scopes /api/ai/tutor to courses they teach, but a student
-// tutor in an instructor's sidebar is just noise.
 const instructorNav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/courses", label: "Courses", icon: BookOpen },
-  { to: "/ai", label: "AI Studio", icon: Sparkles },
   { to: "/forum", label: "Forum", icon: MessageSquare },
   { to: "/settings", label: "Settings", icon: Settings },
 ];

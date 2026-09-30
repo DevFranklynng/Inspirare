@@ -17,8 +17,6 @@ import Assignments from "./pages/Assignments";
 import Schedule from "./pages/Schedule";
 import Materials from "./pages/Materials";
 import Forum from "./pages/Forum";
-import AiStudio from "./pages/AiStudio";
-import AiTutor from "./pages/AiTutor";
 import Settings from "./pages/Settings";
 import ChangePassword from "./pages/ChangePassword";
 import Unauthorized from "./pages/Unauthorized";
@@ -65,12 +63,6 @@ export default function App() {
                   <Route path="/schedule" element={withBoundary(<Schedule />)} />
                   <Route path="/materials" element={withBoundary(<Materials />)} />
                   <Route path="/forum" element={withBoundary(<Forum />)} />
-                  {/* AI Sub-Instructor. The pages self-guard by role (AiStudio
-                      redirects non-instructors, AiTutor is student/instructor), so
-                      the routes stay inside the standard app area and inherit the
-                      password gate + error boundary. */}
-                  <Route path="/ai" element={withBoundary(<AiStudio />)} />
-                  <Route path="/tutor" element={withBoundary(<AiTutor />)} />
                   <Route path="/assessments" element={<Navigate to="/assignments" replace />} />
                   <Route path="/settings" element={withBoundary(<Settings />)} />
                 </Route>
