@@ -57,12 +57,16 @@ export function SearchInput({ value, onChange, placeholder = "Search…", classN
   );
 }
 
-export function AdminSelect({ value, onChange, children, className = "" }) {
+// Rest props are spread onto the <select> so a caller can pass `id` and wire
+// up a <label htmlFor>. AdminButton already did this; this brings the two in
+// line rather than leaving the id silently dropped.
+export function AdminSelect({ value, onChange, children, className = "", ...props }) {
   return (
     <select
       value={value}
       onChange={onChange}
       className={`w-full rounded-xl border border-ink-600 bg-ink-900 px-4 py-2.5 text-sm text-white outline-none focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 ${className}`}
+      {...props}
     >
       {children}
     </select>

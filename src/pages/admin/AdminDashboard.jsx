@@ -5,6 +5,7 @@ import { fetchDashboard } from "../../api/dashboard";
 import { fetchAllCourses } from "../../api/admin";
 import { ApiError } from "../../api/client";
 import RegisterIndividual from "../../features/admin/components/RegisterIndividual";
+import AnnouncePanel from "../../features/admin/components/AnnouncePanel";
 import {
   AdminPanel,
   StatCard,
@@ -103,6 +104,8 @@ export default function AdminDashboard() {
           <AdminButton variant="secondary">View courses</AdminButton>
         </Link>
       </div>
+
+      <AnnouncePanel />
 
       <RegisterIndividual />
     </div>

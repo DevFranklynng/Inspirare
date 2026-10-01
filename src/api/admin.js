@@ -75,3 +75,20 @@ export async function unenrollStudent({ studentId, courseId }) {
   });
   return data;
 }
+
+/**
+ * Broadcasts one notification to a whole audience. For platform-wide updates
+ * only - course content changes notify on their own.
+ */
+export async function sendAnnouncement({ title, body, audience, courseId }) {
+  const data = await request("/admin/announce", {
+    method: "POST",
+    body: {
+      title,
+      body,
+      audience,
+      course_id: courseId || null,
+    },
+  });
+  return data;
+}
