@@ -89,3 +89,50 @@ export function formatAddedLabel(dateStr) {
   if (Number.isNaN(date.getTime())) return null;
   return `Added ${date.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
 }
+
+/**
+ * Coarse "time ago" for notification rows: "Just now", "5m ago", "3h ago",
+ * "2d ago", then an absolute date past a week ("Sep 20").
+ *
+ * Deliberately coarse. A precise "2 minutes 14 seconds ago" in a list that
+ * re-renders on a poll invites the reader to distrust the number the instant
+ * it ticks over, and nothing here needs that precision - the absolute date is
+ * always available as a tooltip.
+ */
+export function formatRelativeTime(dateStr) {
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const seconds = Math.round((Date.now() - date.getTime()) / 1000);
+
+  // A clock skew that puts the timestamp in the future reads better as
+  // "Just now" than as a negative age.
+  if (seconds < 45) return "Just now";
+
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+
+  const days = Math.round(hours / 24);
+  if (days < 7) return `${days}d ago`;
+
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: date.getFullYear() !== new Date().getFullYear() ? "numeric" : undefined,
+  });
+}
+
+/** The full local timestamp, for a title/tooltip on a relative label. */
+export function formatAbsoluteTimestamp(dateStr) {
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
