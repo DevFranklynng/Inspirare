@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchCourse, updateCourse } from "../api/courses";
-import { completeLesson } from "../api/lessons";
+import { fetchMyProgress } from "../api/progress";
 import { ApiError } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import LoadingState from "../components/ui/LoadingState";
@@ -15,6 +15,7 @@ import AssignmentManager from "../components/instructor/AssignmentManager";
 import ScheduleManager from "../components/instructor/ScheduleManager";
 import MaterialsManager from "../components/instructor/MaterialsManager";
 import AttendanceManager from "../components/instructor/AttendanceManager";
+import ProgressManager from "../components/instructor/ProgressManager";
 import StudentAssignmentsPanel from "../components/student/StudentAssignmentsPanel";
 import StudentSchedulePanel from "../components/student/StudentSchedulePanel";
 import StudentMaterialsPanel from "../components/student/StudentMaterialsPanel";
@@ -27,6 +28,7 @@ import {
   CalendarDays,
   FolderOpen,
   Users,
+  GraduationCap,
   Pencil,
   X,
   Check,
@@ -38,6 +40,7 @@ const instructorTabs = [
   { id: "schedule", label: "Schedule", icon: CalendarDays },
   { id: "materials", label: "Materials", icon: FolderOpen },
   { id: "attendance", label: "Attendance", icon: Users },
+  { id: "progress", label: "Progress", icon: GraduationCap },
 ];
 
 const studentTabs = [
@@ -57,9 +60,11 @@ export default function CourseDetail() {
   const [notice, setNotice] = useState(null);
   const [activeTab, setActiveTab] = useState("lessons");
 
-  // Lesson completion is tracked locally (see comment in the student branch).
-  const [completedLessonIds, setCompletedLessonIds] = useState(new Set());
-  const [completingId, setCompletingId] = useState(null);
+  // Which lessons the instructor has credited THIS viewer with. Read-only here
+  // and always from the server: it used to live in component state and be
+  // written by the student, so it reset on every refresh and the dashboard
+  // figure was self-reported.
+  const [myProgress, setMyProgress] = useState({ completedLessonIds: [], completedCount: 0, totalLessons: 0, percent: 0 });
 
   // Inline course-title/description editing (instructors only).
   const [editingDetails, setEditingDetails] = useState(false);
@@ -84,6 +89,27 @@ export default function CourseDetail() {
     load();
   }, [load]);
 
+  // Loaded separately, and only once we know the viewer is enrolled: the
+  // progress endpoint is enrolment-scoped, so asking before that would 403 and
+  // surface a scary error to a student who simply hasn't enrolled.
+  useEffect(() => {
+    if (status !== "success" || !course || isInstructor || course.is_enrolled === false) {
+      return;
+    }
+    let cancelled = false;
+    fetchMyProgress(id)
+      .then((p) => {
+        if (!cancelled) setMyProgress(p);
+      })
+      .catch(() => {
+        // Non-fatal: the lessons themselves are already on screen, this only
+        // affects the Done / Not done indicators.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [status, course, isInstructor, id]);
+
   async function handleSaveDetails() {
     if (!draftTitle.trim()) return;
     setSavingDetails(true);
@@ -106,22 +132,8 @@ export default function CourseDetail() {
     }
   }
 
-  async function handleCompleteLesson(lessonId) {
-    setCompletingId(lessonId);
-    try {
-      await completeLesson(lessonId);
-      setCompletedLessonIds((prev) => new Set(prev).add(lessonId));
-    } catch (err) {
-      setNotice({ type: "error", message: err instanceof ApiError ? err.message : "Couldn't mark that lesson complete." });
-    } finally {
-      setCompletingId(null);
-    }
-  }
-
   if (status === "loading") return <LoadingState label="Loading course…" />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
-
-  const canComplete = !isInstructor && course.is_enrolled !== false;
 
   return (
     <div className="flex flex-col gap-5">
@@ -226,6 +238,7 @@ export default function CourseDetail() {
           {activeTab === "schedule" && <ScheduleManager courseId={course.id} />}
           {activeTab === "materials" && <MaterialsManager courseId={course.id} />}
           {activeTab === "attendance" && <AttendanceManager courseId={course.id} />}
+          {activeTab === "progress" && <ProgressManager courseId={course.id} />}
         </>
       ) : (
         <>
@@ -243,12 +256,16 @@ export default function CourseDetail() {
                     <ModuleAccordion
                       key={module.id}
                       module={module}
-                      completedLessonIds={completedLessonIds}
-                      onCompleteLesson={handleCompleteLesson}
-                      completingId={completingId}
-                      canComplete={canComplete}
+                      completedLessonIds={new Set(myProgress.completedLessonIds)}
                     />
                   ))
+              )}
+
+              {course.modules?.length > 0 && myProgress.totalLessons > 0 && (
+                <p className="px-1 text-xs text-slate-400 dark:text-slate-500">
+                  {myProgress.completedCount} of {myProgress.totalLessons} lessons credited by your
+                  instructor ({myProgress.percent}%).
+                </p>
               )}
             </div>
           )}

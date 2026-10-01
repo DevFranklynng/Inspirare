@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { ChevronDown, PlayCircle, CheckCircle2, Circle } from "lucide-react";
-import Button from "../ui/Button";
 
-export default function ModuleAccordion({ module, completedLessonIds, onCompleteLesson, completingId, canComplete }) {
+/**
+ * Course modules and their lessons.
+ *
+ * The completion indicator is READ-ONLY. Completion is granted by the
+ * instructor (POST /lessons/:id/complete is instructor-only), so a student
+ * sees the state of their own progress but has no control over it. There is
+ * deliberately no button here: the previous "Mark complete" control was the
+ * student asserting they had finished, which made the dashboard's progress
+ * figure self-reported and worthless.
+ */
+export default function ModuleAccordion({ module, completedLessonIds }) {
   const [open, setOpen] = useState(true);
 
   return (
@@ -36,24 +45,22 @@ export default function ModuleAccordion({ module, completedLessonIds, onComplete
                   </div>
                 </div>
 
-                {canComplete && (
-                  isDone ? (
-                    <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400">
-                      <CheckCircle2 className="h-4 w-4" />
-                      Done
-                    </span>
-                  ) : (
-                    <Button
-                      variant="ghost"
-                      className="shrink-0 px-2.5 py-1.5 text-xs"
-                      isLoading={completingId === lesson.id}
-                      loadingText=""
-                      onClick={() => onCompleteLesson(lesson.id)}
-                    >
-                      <Circle className="h-4 w-4" />
-                      Mark complete
-                    </Button>
-                  )
+                {isDone ? (
+                  <span
+                    className="flex shrink-0 items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400"
+                    title="Credited by your instructor"
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    Done
+                  </span>
+                ) : (
+                  <span
+                    className="flex shrink-0 items-center gap-1 text-xs font-medium text-slate-300 dark:text-slate-600"
+                    title="Not yet credited by your instructor"
+                  >
+                    <Circle className="h-4 w-4" />
+                    Not done
+                  </span>
                 )}
               </li>
             );

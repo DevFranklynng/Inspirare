@@ -20,9 +20,13 @@ export async function deleteLesson(lessonId) {
   return request(`/lessons/${lessonId}`, { method: "DELETE" });
 }
 
-// Upserts, so calling it more than once is harmless -- safe to call
-// optimistically from the UI.
-export async function completeLesson(lessonId) {
-  const data = await request(`/lessons/${lessonId}/complete`, { method: "POST" });
+// Instructor-only: the instructor credits a STUDENT with having covered a
+// lesson, rather than the student claiming it themselves. Upserts, so marking
+// the same pair twice is harmless. Pass completed: false to take it back.
+export async function completeLesson(lessonId, studentId, completed = true) {
+  const data = await request(`/lessons/${lessonId}/complete`, {
+    method: "POST",
+    body: { student_id: studentId, completed },
+  });
   return data.progress;
 }
