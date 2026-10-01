@@ -16,6 +16,7 @@ import CourseDetail from "./pages/CourseDetail";
 import Assignments from "./pages/Assignments";
 import Schedule from "./pages/Schedule";
 import Materials from "./pages/Materials";
+import Notifications from "./pages/Notifications";
 import Forum from "./pages/Forum";
 import Settings from "./pages/Settings";
 import ChangePassword from "./pages/ChangePassword";
@@ -63,6 +64,7 @@ export default function App() {
                   <Route path="/schedule" element={withBoundary(<Schedule />)} />
                   <Route path="/materials" element={withBoundary(<Materials />)} />
                   <Route path="/forum" element={withBoundary(<Forum />)} />
+                  <Route path="/notifications" element={withBoundary(<Notifications />)} />
                   <Route path="/assessments" element={<Navigate to="/assignments" replace />} />
                   <Route path="/settings" element={withBoundary(<Settings />)} />
                 </Route>

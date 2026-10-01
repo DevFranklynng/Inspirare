@@ -1,6 +1,7 @@
-import { Search, Bell, Menu, Sun, Moon } from "lucide-react";
+import { Search, Menu, Sun, Moon } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useThemeStore } from "../../stores/themeStore";
+import NotificationBell from "../notifications/NotificationBell";
 import Avatar from "../ui/Avatar";
 
 export default function Topbar({ onMenuClick }) {
@@ -39,13 +40,7 @@ export default function Topbar({ onMenuClick }) {
             {mode === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
         )}
-        <button
-          className="relative rounded-full bg-white p-2.5 text-slate-400 shadow-soft hover:text-brand-600 dark:bg-ink-900 dark:text-slate-400 dark:hover:text-brand-300"
-          aria-label="Notifications"
-        >
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand-500" />
-        </button>
+        <NotificationBell />
         <div className="flex items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-soft dark:bg-ink-900">
           <Avatar name={profile?.full_name} src={profile?.avatar_url} />
           <div className="hidden text-left sm:block">
