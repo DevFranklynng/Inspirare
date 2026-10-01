@@ -58,4 +58,13 @@ html {
   html {
     scroll-behavior: auto;
   }
+  /* The keyframes in tailwind.config.js (pop, grow, slide-down) are movement,
+     not decoration, so they are dropped entirely rather than shortened. Listed
+     by class because Tailwind emits the animation shorthand, and a media
+     query cannot target that without naming each utility. */
+  .animate-pop,
+  .animate-grow,
+  .animate-slide-down {
+    animation: none !important;
+  }
 }

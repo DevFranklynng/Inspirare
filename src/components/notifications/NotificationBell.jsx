@@ -19,7 +19,34 @@ import EmptyState from "../ui/EmptyState";
  * minute.
  */
 
-const PANEL_WIDTH_CLASS = "w-[22rem] max-w-[calc(100vw-2rem)]";
+/**
+ * Positioning of the panel, split from the panel's own classes on purpose.
+ *
+ * On a phone the panel is centred against the VIEWPORT, not against the bell.
+ * The bell sits hard against the right edge of the topbar, so a right-anchored
+ * panel had its left edge off-screen on narrow viewports and no way to reach
+ * the overflow. On sm and up it returns to anchoring to the bell, which is what
+ * a dropdown should do next to its trigger.
+ *
+ * `-translate-x-1/2` here and the `transform` inside the slideDown keyframe
+ * would otherwise collide: the keyframe's 100% is `transform: none`, and with
+ * `both` fill that would win and drop the centring. Hence the wrapper.
+ */
+const PANEL_POSITION_CLASS =
+  "absolute z-50 mt-2 left-1/2 w-[calc(100vw-1.5rem)] -translate-x-1/2 " +
+  "sm:left-auto sm:right-0 sm:w-[22rem] sm:max-w-[calc(100vw-2rem)] sm:translate-x-0";
+
+/**
+ * The panel's own box. Height is bounded by the viewport rather than a fixed
+ * 24rem, so on a short or landscape phone the list scrolls inside the panel
+ * instead of running off the bottom of the screen where it cannot be reached.
+ * `dvh` rather than `vh` because mobile browser chrome changes `vh` mid-scroll.
+ */
+const PANEL_BOX_CLASS =
+  "flex max-h-[calc(100dvh-4.5rem)] flex-col overflow-hidden rounded-2xl border " +
+  "border-slate-100 bg-white shadow-panel outline-none " +
+  "animate-slide-down sm:animate-none " +
+  "dark:border-ink-700 dark:bg-ink-900";
 
 export default function NotificationBell() {
   const { isAdmin, isAuthenticated } = useAuth();
@@ -119,61 +146,63 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div
-          ref={panelRef}
-          role="dialog"
-          aria-label="Notifications"
-          tabIndex={-1}
-          className={`absolute right-0 z-50 mt-2 ${PANEL_WIDTH_CLASS} overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-panel outline-none dark:border-ink-700 dark:bg-ink-900`}
-        >
-          <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-4 py-3 dark:border-ink-700">
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-              Notifications
-            </p>
-            {unreadCount > 0 && (
-              <button
-                type="button"
-                onClick={markAllRead}
-                className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-300 dark:hover:bg-brand-500/10"
+        <div className={PANEL_POSITION_CLASS}>
+          <div
+            ref={panelRef}
+            role="dialog"
+            aria-label="Notifications"
+            tabIndex={-1}
+            className={PANEL_BOX_CLASS}
+          >
+            <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-4 py-3 dark:border-ink-700">
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                Notifications
+              </p>
+              {unreadCount > 0 && (
+                <button
+                  type="button"
+                  onClick={markAllRead}
+                  className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-300 dark:hover:bg-brand-500/10"
+                >
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  Mark all read
+                </button>
+              )}
+            </div>
+
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain max-h-[55dvh] sm:max-h-[24rem]">
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2 py-10 text-sm text-slate-400 dark:text-slate-500">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading notifications…
+                </div>
+              ) : (
+                <NotificationList
+                  notifications={notifications}
+                  onOpen={handleOpenItem}
+                  compact
+                  emptyState={
+                    <div className="p-4">
+                      <EmptyState
+                        icon={Bell}
+                        title="You're all caught up"
+                        description="New assignments, lessons, materials and class changes will show up here."
+                      />
+                    </div>
+                  }
+                />
+              )}
+            </div>
+
+            <div className="border-t border-slate-100 px-4 py-2.5 dark:border-ink-700">
+              <Link
+                to="/notifications"
+                onClick={close}
+                className="text-xs font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-300 dark:hover:text-brand-200"
               >
-                <CheckCheck className="h-3.5 w-3.5" />
-                Mark all read
-              </button>
-            )}
-          </div>
-
-          <div className="max-h-[24rem] overflow-y-auto">
-            {isLoading ? (
-              <div className="flex items-center justify-center gap-2 py-10 text-sm text-slate-400 dark:text-slate-500">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading notifications…
-              </div>
-            ) : (
-              <NotificationList
-                notifications={notifications}
-                onOpen={handleOpenItem}
-                compact
-                emptyState={
-                  <div className="p-4">
-                    <EmptyState
-                      icon={Bell}
-                      title="You're all caught up"
-                      description="New assignments, lessons, materials and class changes will show up here."
-                    />
-                  </div>
-                }
-              />
-            )}
-          </div>
-
-          <div className="border-t border-slate-100 px-4 py-2.5 dark:border-ink-700">
-            <Link
-              to="/notifications"
-              onClick={close}
-              className="text-xs font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-300 dark:hover:text-brand-200"
-            >
-              View all notifications
-            </Link>
+                View all notifications
+              </Link>
+            </div>
           </div>
         </div>
       )}

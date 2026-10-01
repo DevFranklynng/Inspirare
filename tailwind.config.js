@@ -88,10 +88,19 @@ export default {
           "0%": { transform: "scaleY(0)" },
           "100%": { transform: "scaleY(1)" },
         },
+        // The notification panel opens downward from under the bell. On a
+        // phone it slides; on desktop it is anchored to the bell and a slide
+        // reads as lag, so that view opts out (see NotificationBell.jsx).
+        slideDown: {
+          "0%": { opacity: "0", transform: "translateY(-8px) scaleY(0.97)" },
+          "100%": { opacity: "1", transform: "none" },
+        },
       },
       animation: {
         pop: "pop 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) both",
         grow: "grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both",
+        "slide-down":
+          "slideDown 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) both",
       },
       boxShadow: {
         card: "0 1px 2px rgba(24, 29, 70, 0.04), 0 8px 24px rgba(24, 29, 70, 0.06)",
