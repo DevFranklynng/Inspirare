@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronDown, PlayCircle, CheckCircle2, Circle } from "lucide-react";
 
 /**
@@ -14,6 +14,13 @@ import { ChevronDown, PlayCircle, CheckCircle2, Circle } from "lucide-react";
 export default function ModuleAccordion({ module, completedLessonIds }) {
   const [open, setOpen] = useState(true);
 
+  // Sorted defensively rather than trusting the API: an unordered nested select
+  // previously showed students these lessons scrambled.
+  const lessons = useMemo(
+    () => [...(module.lessons || [])].sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0)),
+    [module.lessons]
+  );
+
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-ink-700">
       <button
@@ -26,10 +33,10 @@ export default function ModuleAccordion({ module, completedLessonIds }) {
 
       {open && (
         <ul className="divide-y divide-slate-100 bg-white dark:divide-ink-700 dark:bg-ink-900">
-          {(module.lessons || []).length === 0 && (
+          {lessons.length === 0 && (
             <li className="px-4 py-3 text-xs text-slate-400 dark:text-slate-500">No lessons in this module yet.</li>
           )}
-          {(module.lessons || []).map((lesson) => {
+          {lessons.map((lesson) => {
             const isDone = completedLessonIds.has(lesson.id);
             return (
               <li key={lesson.id} className="flex items-center justify-between gap-3 px-4 py-3">
