@@ -2,16 +2,16 @@ import { Loader2 } from "lucide-react";
 
 const variants = {
   primary:
-    "bg-brand-600 text-white hover:bg-brand-700 disabled:bg-brand-300 shadow-pop rounded-full",
+    "bg-[#6652d5] text-white hover:bg-[#5743c5] disabled:bg-brand-300 shadow-[0_5px_14px_rgba(91,70,195,.2)] rounded-xl",
   secondary:
-    "bg-white text-brand-700 border border-brand-200 hover:bg-brand-50 disabled:text-brand-300 rounded-full dark:bg-ink-900 dark:border-ink-700 dark:text-brand-300 dark:hover:bg-ink-800",
-  ghost: "bg-transparent text-slate-600 hover:bg-slate-100 rounded-xl dark:text-slate-400 dark:hover:bg-ink-800",
-  dark: "bg-slate-900 text-white hover:bg-slate-800 disabled:bg-slate-400 rounded-full",
+    "bg-white text-brand-700 border border-[#e8e4f2] hover:bg-[#f7f5fc] disabled:text-brand-300 rounded-xl dark:bg-ink-900 dark:border-ink-700 dark:text-brand-300 dark:hover:bg-ink-800",
+  ghost: "bg-transparent text-slate-600 hover:bg-[#f4f2f9] rounded-xl dark:text-slate-400 dark:hover:bg-ink-800",
+  dark: "bg-[#29263c] text-white hover:bg-[#1e1b30] disabled:bg-slate-400 rounded-xl",
 };
 
 const sizes = {
-  md: "px-4 py-2.5 text-sm",
-  sm: "px-3 py-1.5 text-xs"
+  md: "px-4 py-2.5 text-[13px]",
+  sm: "px-3 py-1.5 text-[11px]"
 };
 
 export default function Button({

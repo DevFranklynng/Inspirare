@@ -6,17 +6,17 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: "#eef1fd",
-          100: "#dde3fb",
-          200: "#b6c1f6",
-          300: "#8e9fef",
-          400: "#6f81ea",
-          500: "#5468e3",
-          600: "#4453c9",
-          700: "#3641a0",
-          800: "#2b3480",
-          900: "#232a63",
-          950: "#181d46",
+          50: "#f4f1fd",
+          100: "#e8e3fb",
+          200: "#d3c9f7",
+          300: "#b7a8f0",
+          400: "#927ce7",
+          500: "#745edd",
+          600: "#624ccd",
+          700: "#503eb2",
+          800: "#40338e",
+          900: "#362d70",
+          950: "#28224e",
         },
         // Landing-page accents (see src/components/landing/* and
         // src/features/landing/*). The admin area no longer has a palette of

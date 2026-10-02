@@ -47,9 +47,9 @@ export default function Dashboard() {
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   return (
-    <div className="flex flex-col gap-4 lg:gap-6">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
-        <div className="lg:col-span-2">
+    <div className="dashboard-grid flex flex-col gap-4 lg:gap-5">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:gap-4">
+        <div className="lg:col-span-5">
           <WelcomeCard
             name={firstName}
             subtitle={
@@ -59,13 +59,13 @@ export default function Dashboard() {
             }
           />
         </div>
-        <QuickLinksCard isInstructor={isInstructor} />
+        <div className="lg:col-span-7"><QuickLinksCard isInstructor={isInstructor} /></div>
       </div>
 
       {isInstructor ? (
         <>
           <InstructorSummary data={data} />
-          <Card>
+          <Card className="dashboard-panel">
             <h2 className="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Your courses</h2>
             {(!data.courses || data.courses.length === 0) ? (
               <p className="text-sm text-slate-400 dark:text-slate-500">No courses assigned to you yet.</p>
@@ -97,21 +97,21 @@ export default function Dashboard() {
           </Card>
         </>
       ) : (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:gap-4">
+          <div className="lg:col-span-7">
             <ProgressCard courses={data.enrolled_courses} />
           </div>
-          <PerformanceCard grade={data.recent_grade} />
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-5"><PerformanceCard grade={data.recent_grade} /></div>
+          <div className="lg:col-span-7">
             <UpcomingAssignments assignments={data.upcoming_assignments} />
           </div>
         </div>
       )}
 
       {!isInstructor && (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
-          <UpcomingClasses courses={data.enrolled_courses} />
-          <RecentMaterials courses={data.enrolled_courses} />
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:gap-4">
+          <div className="lg:col-span-5"><UpcomingClasses courses={data.enrolled_courses} /></div>
+          <div className="lg:col-span-7"><RecentMaterials courses={data.enrolled_courses} /></div>
         </div>
       )}
     </div>

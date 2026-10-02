@@ -11,7 +11,7 @@ import { useThemeStore } from "../../stores/themeStore";
 // what is rendered as `children`; the chrome is identical, which is what keeps
 // the admin area looking like the rest of the product.
 //
-//   md and up:  [ wave sidebar ] [ topbar / page ]   inside a rounded frame
+//   md and up:  [ fixed icon rail ] [ topbar / page ] inside a rounded frame
 //   below md:   [ topbar / page ] + floating bottom bar with a raised bubble
 export default function AppShell({ children }) {
   const { profile, isAdmin, isInstructor, logout } = useAuth();
@@ -30,13 +30,13 @@ export default function AppShell({ children }) {
   const items = useMemo(() => getNavItems({ isAdmin, isInstructor }), [isAdmin, isInstructor]);
 
   return (
-    <div className="min-h-screen bg-canvas-deep md:p-4 lg:p-5 dark:bg-ink-950">
-      <div className="relative mx-auto flex min-h-screen max-w-[1680px] bg-canvas md:min-h-[calc(100dvh-2rem)] md:rounded-[2rem] md:shadow-panel lg:min-h-[calc(100dvh-2.5rem)] dark:bg-ink-950 dark:md:shadow-none dark:md:ring-1 dark:md:ring-white/10">
+    <div className="app-backdrop min-h-screen md:p-4 lg:p-5 dark:bg-ink-950">
+      <div className="app-window relative mx-auto flex min-h-screen max-w-[1680px] bg-canvas md:min-h-[calc(100dvh-2rem)] md:rounded-[2rem] md:shadow-panel lg:min-h-[calc(100dvh-2.5rem)] dark:bg-ink-950 dark:md:shadow-none dark:md:ring-1 dark:md:ring-white/10">
         <SideNav items={items} isAdmin={isAdmin} onLogout={logout} />
 
         <div className="flex min-w-0 flex-1 flex-col">
           <Topbar />
-          <main className="flex-1 overflow-x-hidden px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-4 sm:px-6 md:pb-10 lg:px-8 lg:pt-6">
+          <main className="flex-1 overflow-x-hidden px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-5 sm:px-6 md:pb-10 lg:px-9 lg:pt-7">
             {children}
           </main>
         </div>

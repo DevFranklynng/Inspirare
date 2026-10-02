@@ -10,7 +10,7 @@ import { Loader2, AlertTriangle, Search, X } from "lucide-react";
 export function AdminPanel({ children, className = "" }) {
   return (
     <div
-      className={`rounded-xl3 border border-slate-100 bg-white shadow-soft dark:border-ink-700 dark:bg-ink-900 ${className}`}
+      className={`rounded-[1.35rem] border border-[#efedf5] bg-white shadow-[0_3px_14px_rgba(38,31,77,0.045)] dark:border-ink-700 dark:bg-ink-900 ${className}`}
     >
       {children}
     </div>
@@ -58,7 +58,7 @@ export function SearchInput({ value, onChange, placeholder = "Search…", classN
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-300 dark:border-ink-700 dark:bg-ink-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-brand-500 dark:focus:ring-brand-500/30"
+        className="w-full rounded-xl border border-[#eae7f1] bg-[#fbfaff] py-2.5 pl-9 pr-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-2 focus:ring-[#e2dcfa] dark:border-ink-700 dark:bg-ink-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-brand-500 dark:focus:ring-brand-500/30"
       />
     </div>
   );
@@ -133,11 +133,11 @@ export function AdminButton({
   ...props
 }) {
   const variants = {
-    primary: "rounded-full bg-brand-600 text-white shadow-pop hover:bg-brand-700 disabled:bg-brand-300 disabled:shadow-none",
+    primary: "rounded-xl bg-[#6652d5] text-white shadow-[0_5px_14px_rgba(91,70,195,.2)] hover:bg-[#5743c5] disabled:bg-brand-300 disabled:shadow-none",
     secondary:
-      "rounded-full border border-brand-200 bg-white text-brand-700 hover:bg-brand-50 disabled:text-brand-300 dark:border-ink-700 dark:bg-ink-900 dark:text-brand-300 dark:hover:bg-ink-800",
+      "rounded-xl border border-[#e8e4f2] bg-white text-brand-700 hover:bg-[#f7f5fc] disabled:text-brand-300 dark:border-ink-700 dark:bg-ink-900 dark:text-brand-300 dark:hover:bg-ink-800",
     danger:
-      "rounded-full border border-red-200 bg-white text-red-600 hover:bg-red-50 disabled:text-red-300 dark:border-red-900/50 dark:bg-transparent dark:text-red-300 dark:hover:bg-red-950/40 dark:disabled:text-red-900",
+      "rounded-xl border border-red-200 bg-white text-red-600 hover:bg-red-50 disabled:text-red-300 dark:border-red-900/50 dark:bg-transparent dark:text-red-300 dark:hover:bg-red-950/40 dark:disabled:text-red-900",
     ghost: "rounded-xl text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-ink-800",
   };
 
