@@ -16,10 +16,12 @@ import ScheduleManager from "../components/instructor/ScheduleManager";
 import MaterialsManager from "../components/instructor/MaterialsManager";
 import AttendanceManager from "../components/instructor/AttendanceManager";
 import ProgressManager from "../components/instructor/ProgressManager";
+import ClassworkManager from "../components/instructor/ClassworkManager";
 import StudentAssignmentsPanel from "../components/student/StudentAssignmentsPanel";
 import StudentSchedulePanel from "../components/student/StudentSchedulePanel";
 import StudentMaterialsPanel from "../components/student/StudentMaterialsPanel";
 import StudentAttendancePanel from "../components/student/StudentAttendancePanel";
+import StudentClassworkPanel from "../components/student/StudentClassworkPanel";
 import { Field, TextInput, TextArea } from "../components/instructor/Field";
 import {
   ArrowLeft,
@@ -31,6 +33,7 @@ import {
   Users,
   GraduationCap,
   CalendarCheck,
+  Code2,
   Lock,
   Pencil,
   X,
@@ -43,6 +46,7 @@ const instructorTabs = [
   { id: "schedule", label: "Schedule", icon: CalendarDays },
   { id: "materials", label: "Materials", icon: FolderOpen },
   { id: "attendance", label: "Attendance", icon: Users },
+  { id: "classwork", label: "Classwork", icon: Code2 },
   { id: "progress", label: "Progress", icon: GraduationCap },
 ];
 
@@ -52,6 +56,7 @@ const studentTabs = [
   { id: "schedule", label: "Schedule", icon: CalendarDays },
   { id: "materials", label: "Materials", icon: FolderOpen },
   { id: "attendance", label: "Attendance", icon: CalendarCheck },
+  { id: "classwork", label: "Classwork", icon: Code2 },
 ];
 
 export default function CourseDetail() {
@@ -264,6 +269,7 @@ export default function CourseDetail() {
           {activeTab === "schedule" && <ScheduleManager courseId={course.id} />}
           {activeTab === "materials" && <MaterialsManager courseId={course.id} />}
           {activeTab === "attendance" && <AttendanceManager courseId={course.id} />}
+        {activeTab === "classwork" && <ClassworkManager courseId={course.id} />}
           {activeTab === "progress" && <ProgressManager courseId={course.id} />}
         </>
       ) : (
@@ -299,6 +305,7 @@ export default function CourseDetail() {
           {activeTab === "schedule" && <StudentSchedulePanel courseId={course.id} />}
           {activeTab === "materials" && <StudentMaterialsPanel courseId={course.id} />}
           {activeTab === "attendance" && <StudentAttendancePanel courseId={course.id} />}
+        {activeTab === "classwork" && <StudentClassworkPanel courseId={course.id} />}
         </>
       )}
     </div>

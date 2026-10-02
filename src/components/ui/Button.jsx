@@ -9,9 +9,15 @@ const variants = {
   dark: "bg-slate-900 text-white hover:bg-slate-800 disabled:bg-slate-400 rounded-full",
 };
 
+const sizes = {
+  md: "px-4 py-2.5 text-sm",
+  sm: "px-3 py-1.5 text-xs"
+};
+
 export default function Button({
   children,
   variant = "primary",
+  size = "md",
   isLoading = false,
   loadingText,
   className = "",
@@ -23,7 +29,7 @@ export default function Button({
     <button
       type={type}
       disabled={disabled || isLoading}
-      className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed ${variants[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 font-semibold transition-colors disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
