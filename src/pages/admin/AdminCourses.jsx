@@ -23,7 +23,7 @@ const columns = [
 ];
 
 const fieldClass =
-  "w-full rounded-xl border border-ink-600 bg-ink-900 px-4 py-2.5 text-sm text-white placeholder:text-ink-300 outline-none focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20";
+  "w-full rounded-xl border border-slate-200 dark:border-ink-700 bg-white dark:bg-ink-900 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-brand-400 dark:focus:border-brand-500 focus:ring-2 focus:ring-brand-300 dark:focus:ring-brand-500/30";
 
 export default function AdminCourses() {
   const navigate = useNavigate();
@@ -176,7 +176,7 @@ export default function AdminCourses() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-ink-300">{courses.length} course{courses.length === 1 ? "" : "s"} total</p>
+        <p className="text-sm text-slate-400 dark:text-slate-500">{courses.length} course{courses.length === 1 ? "" : "s"} total</p>
         <div className="flex flex-col gap-2 sm:flex-row">
           <SearchInput value={query} onChange={setQuery} placeholder="Search title or instructor…" className="sm:w-64" />
           <AdminSelect value={publishFilter} onChange={(e) => setPublishFilter(e.target.value)} className="sm:w-44">
@@ -192,26 +192,26 @@ export default function AdminCourses() {
       </div>
 
       {showCreate && (
-        <div className="rounded-2xl border border-ink-600/60 bg-ink-800 p-5">
+        <div className="rounded-2xl border border-slate-100 dark:border-ink-700 bg-white dark:bg-ink-900 p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 text-sm font-semibold text-white">
-              <Plus className="h-4 w-4 text-gold-400" />
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+              <Plus className="h-4 w-4 text-brand-600 dark:text-brand-300" />
               Create a course
             </h2>
-            <button onClick={() => setShowCreate(false)} className="rounded-lg p-1 text-ink-300 hover:bg-ink-700" aria-label="Close">
+            <button onClick={() => setShowCreate(false)} className="rounded-lg p-1 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-ink-800" aria-label="Close">
               <X className="h-4 w-4" />
             </button>
           </div>
 
           {instructors.length === 0 ? (
-            <p className="text-sm text-ink-300">
-              No instructors yet. Promote someone to instructor on the <button onClick={() => navigate("/admin/users")} className="font-semibold text-gold-400 hover:text-gold-300">Users</button> page, then create a course.
+            <p className="text-sm text-slate-400 dark:text-slate-500">
+              No instructors yet. Promote someone to instructor on the <button onClick={() => navigate("/admin/users")} className="font-semibold text-brand-600 dark:text-brand-300 hover:text-brand-700 dark:hover:text-brand-200">Users</button> page, then create a course.
             </p>
           ) : (
             <form onSubmit={handleCreateCourse} noValidate className="flex flex-col gap-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink-200">Title</label>
+                  <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Title</label>
                   <input
                     type="text"
                     value={createForm.title}
@@ -222,10 +222,10 @@ export default function AdminCourses() {
                     placeholder="e.g. Advanced Web Development"
                     className={fieldClass}
                   />
-                  {createErrors.title && <p className="mt-1 text-xs text-red-400">{createErrors.title}</p>}
+                  {createErrors.title && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{createErrors.title}</p>}
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink-200">Instructor</label>
+                  <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Instructor</label>
                   <AdminSelect
                     value={createForm.instructorId}
                     onChange={(e) => {
@@ -240,12 +240,12 @@ export default function AdminCourses() {
                       </option>
                     ))}
                   </AdminSelect>
-                  {createErrors.instructorId && <p className="mt-1 text-xs text-red-400">{createErrors.instructorId}</p>}
+                  {createErrors.instructorId && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{createErrors.instructorId}</p>}
                 </div>
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-ink-200">Description</label>
+                <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Description</label>
                 <textarea
                   value={createForm.description}
                   onChange={(e) => setCreateForm((f) => ({ ...f, description: e.target.value }))}
@@ -258,7 +258,7 @@ export default function AdminCourses() {
               {createNotice && (
                 <p
                   className={`rounded-lg px-3 py-2 text-sm ${
-                    createNotice.type === "error" ? "bg-red-950/40 text-red-300" : "bg-gold-400/10 text-gold-300"
+                    createNotice.type === "error" ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400" : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"
                   }`}
                 >
                   {createNotice.message}
@@ -298,10 +298,10 @@ export default function AdminCourses() {
           rows={filtered}
           getRowKey={(c) => c.id}
           renderCell={(c, key) => {
-            if (key === "title") return <span className="font-medium text-white">{c.title}</span>;
-            if (key === "instructor") return c.instructor?.full_name || <span className="text-ink-400">Unassigned</span>;
+            if (key === "title") return <span className="font-medium text-slate-900 dark:text-slate-100">{c.title}</span>;
+            if (key === "instructor") return c.instructor?.full_name || <span className="text-slate-400 dark:text-slate-500">Unassigned</span>;
             if (key === "status") return <StatusBadge published={c.is_published} />;
-            if (key === "id") return <span className="font-mono text-xs text-ink-300">{c.id}</span>;
+            if (key === "id") return <span className="font-mono text-xs text-slate-400 dark:text-slate-500">{c.id}</span>;
             if (key === "actions")
               return (
                 <div className="flex flex-wrap items-center gap-2">

@@ -67,21 +67,21 @@ export default function AdminDashboard() {
 
       <AdminPanel className="p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white">Recent courses</h2>
-          <Link to="/admin/courses" className="text-xs font-semibold text-gold-400 hover:text-gold-300">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Recent courses</h2>
+          <Link to="/admin/courses" className="text-xs font-semibold text-brand-600 dark:text-brand-300 hover:text-brand-700 dark:hover:text-brand-200">
             View all
           </Link>
         </div>
 
         {recentCourses.length === 0 ? (
-          <p className="text-sm text-ink-300">No courses created yet.</p>
+          <p className="text-sm text-slate-400 dark:text-slate-500">No courses created yet.</p>
         ) : (
-          <ul className="divide-y divide-ink-600/40">
+          <ul className="divide-y divide-slate-100 dark:divide-ink-700">
             {recentCourses.map((c) => (
               <li key={c.id} className="flex items-center justify-between gap-3 py-3">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-white">{c.title}</p>
-                  <p className="text-xs text-ink-300">{c.instructor?.full_name || "Unassigned"}</p>
+                  <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{c.title}</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500">{c.instructor?.full_name || "Unassigned"}</p>
                 </div>
                 <StatusBadge published={c.is_published} />
               </li>

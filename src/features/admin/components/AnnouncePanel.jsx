@@ -21,7 +21,7 @@ const AUDIENCES = [
 ];
 
 const inputClass =
-  "w-full rounded-xl border border-ink-600 bg-ink-900 px-4 py-2.5 text-sm text-white placeholder:text-ink-300 outline-none focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20";
+  "w-full rounded-xl border border-slate-200 dark:border-ink-700 bg-white dark:bg-ink-900 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-brand-400 dark:focus:border-brand-500 focus:ring-2 focus:ring-brand-300 dark:focus:ring-brand-500/30";
 
 export default function AnnouncePanel() {
   const [form, setForm] = useState({ title: "", body: "", audience: "students", courseId: "" });
@@ -87,17 +87,17 @@ export default function AnnouncePanel() {
   return (
     <AdminPanel className="p-5">
       <div className="mb-1 flex items-center gap-2">
-        <Megaphone className="h-4 w-4 text-gold-400" />
-        <h2 className="text-sm font-semibold text-white">Send an announcement</h2>
+        <Megaphone className="h-4 w-4 text-brand-600 dark:text-brand-300" />
+        <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Send an announcement</h2>
       </div>
-      <p className="mb-4 text-xs text-ink-300">
+      <p className="mb-4 text-xs text-slate-400 dark:text-slate-500">
         Notifies everyone in an audience at once. Use this for platform-wide updates — changes
         inside a course already notify students on their own.
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div>
-          <label htmlFor="announce-title" className="mb-1.5 block text-xs font-medium text-ink-200">
+          <label htmlFor="announce-title" className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
             Title
           </label>
           <input
@@ -112,8 +112,8 @@ export default function AnnouncePanel() {
         </div>
 
         <div>
-          <label htmlFor="announce-body" className="mb-1.5 block text-xs font-medium text-ink-200">
-            Message <span className="text-ink-400">(optional)</span>
+          <label htmlFor="announce-body" className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
+            Message <span className="text-slate-400 dark:text-slate-500">(optional)</span>
           </label>
           <textarea
             id="announce-body"
@@ -128,7 +128,7 @@ export default function AnnouncePanel() {
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
-            <label htmlFor="announce-audience" className="mb-1.5 block text-xs font-medium text-ink-200">
+            <label htmlFor="announce-audience" className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
               Send to
             </label>
             <AdminSelect
@@ -145,8 +145,8 @@ export default function AnnouncePanel() {
           </div>
 
           <div>
-            <label htmlFor="announce-course" className="mb-1.5 block text-xs font-medium text-ink-200">
-              About a course <span className="text-ink-400">(optional)</span>
+            <label htmlFor="announce-course" className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
+              About a course <span className="text-slate-400 dark:text-slate-500">(optional)</span>
             </label>
             <AdminSelect
               id="announce-course"
@@ -168,8 +168,8 @@ export default function AnnouncePanel() {
             role="status"
             className={`rounded-lg px-3 py-2 text-sm ${
               notice.type === "error"
-                ? "bg-red-950/50 text-red-300"
-                : "bg-green-950/50 text-green-300"
+                ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400"
+                : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"
             }`}
           >
             {notice.message}

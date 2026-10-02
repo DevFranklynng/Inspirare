@@ -127,13 +127,13 @@ export default function AdminEnrollments() {
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-sm text-ink-300">
+      <p className="text-sm text-slate-400 dark:text-slate-500">
         Each student can only be enrolled in one course at a time — students who already have a course are listed below.
       </p>
 
       <AdminPanel className="p-5">
-        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
-          <UserPlus className="h-4 w-4 text-gold-400" />
+        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <UserPlus className="h-4 w-4 text-brand-600 dark:text-brand-300" />
           Enroll a student
         </h2>
 
@@ -159,7 +159,7 @@ export default function AdminEnrollments() {
           <form className="flex flex-col gap-4" onSubmit={handleEnroll}>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-ink-200">Student</label>
+                <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Student</label>
                 <AdminSelect value={studentId} onChange={(e) => setStudentId(e.target.value)}>
                   <option value="">Select an unenrolled student…</option>
                   {availableStudents.map((s) => (
@@ -171,7 +171,7 @@ export default function AdminEnrollments() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-ink-200">Course</label>
+                <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Course</label>
                 <AdminSelect value={courseId} onChange={(e) => setCourseId(e.target.value)}>
                   <option value="">Select a course…</option>
                   {courses.map((c) => (
@@ -184,14 +184,14 @@ export default function AdminEnrollments() {
             </div>
 
             {prefilledStudentEnrolled && (
-              <p className="rounded-lg bg-red-950/40 px-3 py-2 text-xs text-red-300">
+              <p className="rounded-lg bg-red-950/40 px-3 py-2 text-xs text-red-600 dark:text-red-300">
                 That student is already enrolled and was hidden from the picker. Remove their current enrollment below
                 first.
               </p>
             )}
 
             {selectedCourse && !selectedCourse.is_published && (
-              <p className="rounded-lg bg-gold-400/10 px-3 py-2 text-xs text-gold-300">
+              <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:bg-amber-950/40 dark:text-amber-400">
                 This course is unpublished. Admin enrollment still works — students just can't self-enroll in it.
               </p>
             )}
@@ -199,7 +199,7 @@ export default function AdminEnrollments() {
             {notice && (
               <p
                 className={`rounded-lg px-3 py-2 text-sm ${
-                  notice.type === "error" ? "bg-red-950/40 text-red-300" : "bg-gold-400/10 text-gold-300"
+                  notice.type === "error" ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400" : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"
                 }`}
               >
                 {notice.message}
@@ -216,20 +216,20 @@ export default function AdminEnrollments() {
       </AdminPanel>
 
       <AdminPanel className="p-5">
-        <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
-          <GraduationCap className="h-4 w-4 text-gold-400" />
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <GraduationCap className="h-4 w-4 text-brand-600 dark:text-brand-300" />
           Current enrollments
         </h2>
 
         {enrollments.length === 0 ? (
-          <p className="text-sm text-ink-300">No students are enrolled yet.</p>
+          <p className="text-sm text-slate-400 dark:text-slate-500">No students are enrolled yet.</p>
         ) : (
-          <dl className="divide-y divide-ink-600/40">
+          <dl className="divide-y divide-slate-100 dark:divide-ink-700">
             {enrollments.map((e) => (
               <div key={e.id} className="flex items-center justify-between gap-3 py-3 text-sm">
                 <div className="min-w-0">
-                  <dt className="truncate font-medium text-white">{e.student?.full_name || "Student"}</dt>
-                  <p className="truncate text-xs text-ink-300">
+                  <dt className="truncate font-medium text-slate-900 dark:text-slate-100">{e.student?.full_name || "Student"}</dt>
+                  <p className="truncate text-xs text-slate-400 dark:text-slate-500">
                     {e.course?.title || "Course"} · enrolled {new Date(e.enrolled_at).toLocaleDateString()}
                   </p>
                 </div>

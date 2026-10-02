@@ -28,6 +28,10 @@ import EmptyState from "../ui/EmptyState";
  * the overflow. On sm and up it returns to anchoring to the bell, which is what
  * a dropdown should do next to its trigger.
  *
+ * That only works if the bell's wrapper is NOT a containing block on phones,
+ * otherwise `left-1/2` resolves against the bell and the panel overflows the
+ * right edge. Hence `sm:relative` on the wrapper below, not plain `relative`.
+ *
  * `-translate-x-1/2` here and the `transform` inside the slideDown keyframe
  * would otherwise collide: the keyframe's 100% is `transform: none`, and with
  * `both` fill that would win and drop the centring. Hence the wrapper.
@@ -124,7 +128,7 @@ export default function NotificationBell() {
   if (!isAuthenticated || isAdmin) return null;
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="sm:relative" ref={containerRef}>
       <button
         type="button"
         onClick={handleToggle}

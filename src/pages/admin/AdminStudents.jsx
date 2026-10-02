@@ -65,7 +65,7 @@ export default function AdminStudents() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-ink-300">{students.length} registered student{students.length === 1 ? "" : "s"}</p>
+        <p className="text-sm text-slate-400 dark:text-slate-500">{students.length} registered student{students.length === 1 ? "" : "s"}</p>
         <SearchInput value={query} onChange={setQuery} placeholder="Search students…" className="sm:w-72" />
       </div>
 
@@ -83,14 +83,14 @@ export default function AdminStudents() {
           rows={filtered}
           getRowKey={(s) => s.id}
           renderCell={(s, key) => {
-            if (key === "name") return <span className="font-medium text-white">{s.full_name}</span>;
-            if (key === "id") return <span className="font-mono text-xs text-ink-300">{s.id}</span>;
+            if (key === "name") return <span className="font-medium text-slate-900 dark:text-slate-100">{s.full_name}</span>;
+            if (key === "id") return <span className="font-mono text-xs text-slate-400 dark:text-slate-500">{s.id}</span>;
             if (key === "enrollment") {
               const e = enrollmentByStudent[s.id];
-              if (!e) return <span className="text-xs text-ink-400">Not enrolled</span>;
+              if (!e) return <span className="text-xs text-slate-400 dark:text-slate-500">Not enrolled</span>;
               return (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-400/10 px-2.5 py-1 text-xs font-medium text-gold-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 dark:bg-brand-500/15 px-2.5 py-1 text-xs font-medium text-brand-700 dark:text-brand-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
                   {e.course?.title || "Enrolled"}
                 </span>
               );

@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
-// Instructor-only theme preference (students are locked to light, admins have
-// their own fixed dark layout, so only this AppLayout branch reads it).
-// Persisted locally so the choice survives reloads; the actual `dark` class on
-// <html> is applied/removed by AppLayout so it stays role-aware.
+// Light/dark preference, shared by every role now that students, instructors
+// and admins all render inside AppShell. Persisted locally so the choice
+// survives reloads; the actual `dark` class on <html> is applied/removed by
+// AppShell, so the landing and auth screens are never affected.
 
 const THEME_KEY = "inspirare_theme";
 

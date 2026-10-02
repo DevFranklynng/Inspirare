@@ -13,9 +13,9 @@ import {
 } from "../../features/admin/components/AdminUi";
 
 const ROLE_DEFS = {
-  student: "bg-ink-600 text-ink-100",
-  instructor: "bg-brand-500/15 text-brand-300",
-  admin: "bg-gold-400/10 text-gold-300",
+  student: "bg-slate-100 text-slate-600 dark:bg-ink-700 dark:text-slate-200",
+  instructor: "bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300",
+  admin: "bg-lilac-100 text-lilac-600 dark:bg-lilac-500/15 dark:text-lilac-300",
 };
 
 function RoleBadge({ role }) {
@@ -95,14 +95,14 @@ export default function AdminUsers() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-ink-300">{users.length} account{users.length === 1 ? "" : "s"}</p>
+        <p className="text-sm text-slate-400 dark:text-slate-500">{users.length} account{users.length === 1 ? "" : "s"}</p>
         <SearchInput value={query} onChange={setQuery} placeholder="Search name or role…" className="sm:w-72" />
       </div>
 
       {notice && (
         <p
           className={`rounded-lg px-3 py-2 text-sm ${
-            notice.type === "error" ? "bg-red-950/40 text-red-300" : "bg-gold-400/10 text-gold-300"
+            notice.type === "error" ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400" : "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"
           }`}
         >
           {notice.message}
@@ -123,11 +123,11 @@ export default function AdminUsers() {
           rows={filtered}
           getRowKey={(u) => u.id}
           renderCell={(u, key) => {
-            if (key === "name") return <span className="font-medium text-white">{u.full_name}</span>;
+            if (key === "name") return <span className="font-medium text-slate-900 dark:text-slate-100">{u.full_name}</span>;
             if (key === "role") return <RoleBadge role={u.role} />;
             if (key === "created")
               return (
-                <span className="text-xs text-ink-300">
+                <span className="text-xs text-slate-400 dark:text-slate-500">
                   {new Date(u.created_at).toLocaleDateString()}
                 </span>
               );

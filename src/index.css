@@ -15,6 +15,72 @@ body {
   font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* ------------------------------------------------------------------ */
+/* App shell navigation (see components/layout/SideNav + MobileNav)    */
+/* ------------------------------------------------------------------ */
+
+/* One gradient, defined once: the sidebar body and its SVG wave edge both
+   read these, so the two halves of the panel always match. */
+:root {
+  --nav-top: #7455e6;
+  --nav-mid: #5468e3;
+  --nav-bottom: #4453c9;
+}
+
+.bg-nav-gradient {
+  background-image: linear-gradient(
+    180deg,
+    var(--nav-top) 0%,
+    var(--nav-mid) 45%,
+    var(--nav-bottom) 100%
+  );
+}
+
+/* Mobile bar: a circular bite is masked out of the bar's top edge, exactly
+   where the raised active bubble sits. --notch-x is a registered property so
+   the bite can glide between tabs on the same curve as the bubble. Browsers
+   without @property still work: the bite simply jumps instead of gliding. */
+@property --notch-x {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+
+.mobile-nav-surface {
+  --notch-x: 50%;
+  -webkit-mask-image: radial-gradient(
+    circle 32px at var(--notch-x) 2px,
+    transparent 31.25px,
+    #000 31.75px
+  );
+  mask-image: radial-gradient(
+    circle 32px at var(--notch-x) 2px,
+    transparent 31.25px,
+    #000 31.75px
+  );
+  transition: --notch-x 0.5s cubic-bezier(0.3, 1.15, 0.5, 1);
+}
+
+.mobile-nav-bubble {
+  transition: left 0.5s cubic-bezier(0.3, 1.15, 0.5, 1), opacity 0.25s ease;
+}
+
+/* A drop-shadow filter follows the notched silhouette; box-shadow would not. */
+.mobile-nav-shadow {
+  filter: drop-shadow(0 12px 22px rgba(24, 29, 70, 0.2))
+    drop-shadow(0 2px 3px rgba(24, 29, 70, 0.08));
+}
+.dark .mobile-nav-shadow {
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.65));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav-surface,
+  .mobile-nav-bubble {
+    transition: none;
+  }
+}
+
 /* Decorative wave divider used on the auth screen */
 .auth-wave {
   clip-path: polygon(
@@ -64,7 +130,10 @@ html {
      query cannot target that without naming each utility. */
   .animate-pop,
   .animate-grow,
-  .animate-slide-down {
+  .animate-slide-down,
+  .animate-nav-pop,
+  .animate-sheet-up,
+  .animate-fade-in {
     animation: none !important;
   }
 }

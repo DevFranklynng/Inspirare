@@ -18,10 +18,9 @@ export default {
           900: "#232a63",
           950: "#181d46",
         },
-        // Admin-only palette (see src/layouts/AdminLayout.jsx and
-        // src/features/admin/*) — deliberately separate from `brand` so the
-        // student/instructor blue theme is untouched.
-        // Landing-page accents (see src/features/landing/*).
+        // Landing-page accents (see src/components/landing/* and
+        // src/features/landing/*). The admin area no longer has a palette of
+        // its own: it shares `brand` with the rest of the signed-in app.
         lilac: {
           50: "#f6f3ff",
           100: "#eee9ff",
@@ -57,6 +56,11 @@ export default {
           800: "#141416",
           900: "#0c0c0d",
           950: "#060607",
+        },
+        // App canvas: `deep` is the page behind the frame, `DEFAULT` the frame.
+        canvas: {
+          DEFAULT: "#f5f4fd",
+          deep: "#e9e7f8",
         },
         gold: {
           50: "#fbf6e9",
@@ -95,12 +99,30 @@ export default {
           "0%": { opacity: "0", transform: "translateY(-8px) scaleY(0.97)" },
           "100%": { opacity: "1", transform: "none" },
         },
+        // Mobile nav: the active icon pops into the raised bubble, and the
+        // "More" sheet rises from the bottom edge over a fading scrim.
+        navPop: {
+          "0%": { opacity: "0", transform: "scale(0.4) rotate(-14deg)" },
+          "60%": { opacity: "1", transform: "scale(1.12) rotate(2deg)" },
+          "100%": { opacity: "1", transform: "none" },
+        },
+        sheetUp: {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "none" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         pop: "pop 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) both",
         grow: "grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both",
         "slide-down":
           "slideDown 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) both",
+        "nav-pop": "navPop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both",
+        "sheet-up": "sheetUp 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both",
+        "fade-in": "fadeIn 0.2s ease-out both",
       },
       boxShadow: {
         card: "0 1px 2px rgba(24, 29, 70, 0.04), 0 8px 24px rgba(24, 29, 70, 0.06)",

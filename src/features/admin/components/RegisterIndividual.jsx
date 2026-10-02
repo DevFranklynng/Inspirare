@@ -32,16 +32,16 @@ function CopyButton({ text }) {
         setCopied(ok);
         if (ok) setTimeout(() => setCopied(false), 2000);
       }}
-      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-ink-500 px-2.5 py-1.5 text-xs font-semibold text-ink-100 transition-colors hover:bg-ink-700"
+      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 dark:border-ink-600 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-ink-800"
     >
-      {copied ? <Check className="h-3.5 w-3.5 text-gold-400" /> : <Copy className="h-3.5 w-3.5" />}
+      {copied ? <Check className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" /> : <Copy className="h-3.5 w-3.5" />}
       {copied ? "Copied" : "Copy"}
     </button>
   );
 }
 
 const inputClass =
-  "w-full rounded-xl border border-ink-600 bg-ink-900 px-4 py-2.5 text-sm text-white placeholder:text-ink-300 outline-none focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20";
+  "w-full rounded-xl border border-slate-200 dark:border-ink-700 bg-white dark:bg-ink-900 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-brand-400 dark:focus:border-brand-500 focus:ring-2 focus:ring-brand-300 dark:focus:ring-brand-500/30";
 
 export default function RegisterIndividual({ onRegistered }) {
   const [form, setForm] = useState({ fullName: "", email: "", role: "student" });
@@ -103,18 +103,18 @@ export default function RegisterIndividual({ onRegistered }) {
 
   return (
     <AdminPanel className="p-5">
-      <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold text-white">
-        <UserPlus className="h-4 w-4 text-gold-400" />
+      <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+        <UserPlus className="h-4 w-4 text-brand-600 dark:text-brand-300" />
         Register an individual
       </h2>
-      <p className="mb-4 text-xs text-ink-300">
+      <p className="mb-4 text-xs text-slate-400 dark:text-slate-500">
         Create an account for someone. The password is generated for you — pass the printed credentials on to them.
       </p>
 
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-ink-200">Full name</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Full name</label>
             <input
               type="text"
               value={form.fullName}
@@ -122,10 +122,10 @@ export default function RegisterIndividual({ onRegistered }) {
               placeholder="Enter their name"
               className={inputClass}
             />
-            {fieldErrors.fullName && <p className="mt-1 text-xs text-red-400">{fieldErrors.fullName}</p>}
+            {fieldErrors.fullName && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{fieldErrors.fullName}</p>}
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-ink-200">E-mail address</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">E-mail address</label>
             <input
               type="email"
               value={form.email}
@@ -133,12 +133,12 @@ export default function RegisterIndividual({ onRegistered }) {
               placeholder="you@example.com"
               className={inputClass}
             />
-            {fieldErrors.email && <p className="mt-1 text-xs text-red-400">{fieldErrors.email}</p>}
+            {fieldErrors.email && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{fieldErrors.email}</p>}
           </div>
         </div>
 
         <div className="sm:w-1/2">
-          <label className="mb-1.5 block text-sm font-medium text-ink-200">Role</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Role</label>
           <AdminSelect value={form.role} onChange={update("role")}>
             <option value="student">Student</option>
             <option value="instructor">Instructor</option>
@@ -147,7 +147,7 @@ export default function RegisterIndividual({ onRegistered }) {
         </div>
 
         {error && (
-          <p role="alert" className="rounded-lg bg-red-950/40 px-3 py-2 text-sm text-red-300">
+          <p role="alert" className="rounded-lg bg-red-950/40 px-3 py-2 text-sm text-red-600 dark:text-red-300">
             {error}
           </p>
         )}
@@ -165,27 +165,27 @@ export default function RegisterIndividual({ onRegistered }) {
       </form>
 
       {credentials && (
-        <div className="mt-5 rounded-xl border border-gold-400/30 bg-gold-400/5 p-4">
-          <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gold-300">
+        <div className="mt-5 rounded-xl border border-brand-200 dark:border-brand-500/30 bg-brand-50/60 dark:bg-brand-500/10 p-4">
+          <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-300">
             <KeyRound className="h-4 w-4" />
             Account created — share these credentials
           </div>
-          <dl className="divide-y divide-ink-600/40 text-sm">
+          <dl className="divide-y divide-slate-100 dark:divide-ink-700 text-sm">
             <div className="flex items-center justify-between gap-4 py-2.5">
-              <dt className="text-ink-300">Role</dt>
-              <dd className="font-medium capitalize text-white">{credentials.role}</dd>
+              <dt className="text-slate-400 dark:text-slate-500">Role</dt>
+              <dd className="font-medium capitalize text-slate-900 dark:text-slate-100">{credentials.role}</dd>
             </div>
             <div className="flex items-center justify-between gap-4 py-2.5">
-              <dt className="text-ink-300">E-mail</dt>
+              <dt className="text-slate-400 dark:text-slate-500">E-mail</dt>
               <dd className="flex min-w-0 items-center gap-2">
-                <span className="truncate font-mono text-xs text-white">{credentials.email}</span>
+                <span className="truncate font-mono text-xs text-slate-900 dark:text-slate-100">{credentials.email}</span>
                 <CopyButton text={credentials.email} />
               </dd>
             </div>
             <div className="flex items-center justify-between gap-4 py-2.5">
-              <dt className="text-ink-300">Password</dt>
+              <dt className="text-slate-400 dark:text-slate-500">Password</dt>
               <dd className="flex min-w-0 items-center gap-2">
-                <span className="truncate font-mono text-xs text-white">{credentials.password}</span>
+                <span className="truncate font-mono text-xs text-slate-900 dark:text-slate-100">{credentials.password}</span>
                 <CopyButton text={credentials.password} />
               </dd>
             </div>

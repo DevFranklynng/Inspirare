@@ -1,45 +1,32 @@
-import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import AdminSidebar from "../features/admin/components/AdminSidebar";
-import AdminHeader from "../features/admin/components/AdminHeader";
+import AppShell from "../components/layout/AppShell";
 
-const titles = {
-  "/admin": "Dashboard",
-  "/admin/users": "Users",
-  "/admin/students": "Students",
-  "/admin/courses": "Courses",
-  "/admin/enrollments": "Enrollments",
-  "/admin/settings": "Settings",
+const pages = {
+  "/admin": { title: "Dashboard", subtitle: "Platform overview and quick actions." },
+  "/admin/users": { title: "Users", subtitle: "Manage accounts and their roles." },
+  "/admin/students": { title: "Students", subtitle: "Everyone registered as a student." },
+  "/admin/courses": { title: "Courses", subtitle: "Create, publish and assign courses." },
+  "/admin/enrollments": { title: "Enrollments", subtitle: "Enroll students into courses." },
+  "/admin/settings": { title: "Settings", subtitle: "Your administrator profile." },
 };
 
+// The admin area now uses the same AppShell as the student/instructor app, so
+// it gets the same sidebar, topbar and mobile bar. The page heading that used
+// to sit in the old black header is rendered here instead, in the same style
+// the student pages use for their own <h1>.
 export default function AdminLayout() {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const location = useLocation();
-  const title = titles[location.pathname] || "Admin";
+  const { pathname } = useLocation();
+  const page = pages[pathname] || { title: "Admin" };
 
   return (
-    <div className="min-h-screen bg-ink-950">
-      <div className="mx-auto flex min-h-screen max-w-[1600px]">
-        <div className="hidden border-r border-ink-600/60 md:block">
-          <AdminSidebar />
-        </div>
-
-        {mobileNavOpen && (
-          <div className="fixed inset-0 z-40 md:hidden">
-            <div className="absolute inset-0 bg-black/60" onClick={() => setMobileNavOpen(false)} />
-            <div className="absolute inset-y-0 left-0">
-              <AdminSidebar onNavigate={() => setMobileNavOpen(false)} />
-            </div>
-          </div>
+    <AppShell>
+      <div className="mb-5 lg:mb-6">
+        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">{page.title}</h1>
+        {page.subtitle && (
+          <p className="text-sm text-slate-400 dark:text-slate-500">{page.subtitle}</p>
         )}
-
-        <div className="flex min-w-0 flex-1 flex-col">
-          <AdminHeader title={title} onMenuClick={() => setMobileNavOpen(true)} />
-          <main className="flex-1 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
-            <Outlet />
-          </main>
-        </div>
       </div>
-    </div>
+      <Outlet />
+    </AppShell>
   );
 }

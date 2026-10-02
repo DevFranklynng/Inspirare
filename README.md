@@ -31,16 +31,20 @@ src/
   components/
     auth/            AuthLayout, LoginForm, AuthGuard,
                       BlockAdminFromAppArea
-    layout/          AppLayout, Sidebar, Topbar (student/instructor)
+    layout/          AppShell (shared frame), SideNav (desktop wave
+                      sidebar), MobileNav (bottom bar + "More" sheet),
+                      Topbar, navConfig (nav items per role),
+                      AppLayout (student/instructor)
     dashboard/       WelcomeCard, ProgressCard, UpcomingAssignments,
                       PerformanceCard, InstructorSummary
     courses/         CourseCard, ModuleAccordion
     assignments/     AssignmentCard
     ui/              Button, Input, Card, Progress, Avatar, LoadingState,
                       EmptyState, ErrorState, SectionErrorBoundary
-  layouts/           AdminLayout.jsx — dedicated admin shell
+  layouts/           AdminLayout.jsx — admin page heading inside the
+                      shared AppShell
   features/admin/
-    components/      AdminSidebar, AdminHeader, AdminUi.jsx (StatCard,
+    components/      AdminUi.jsx (StatCard,
                       StatusBadge, SearchInput, AdminSelect,
                       LoadingState/EmptyState/ErrorState, ConfirmDialog,
                       AdminButton), DataTable.jsx,
@@ -101,11 +105,16 @@ lists every account and lets the admin reassign roles (`student`,
 
 ### Design
 
-Deliberately its own visual identity — near-black surfaces
-(`ink-*` in `tailwind.config.js`) with a restrained gold accent
-(`gold-*`) used only for the active nav item, primary buttons, and status
-highlights — kept separate from the blue `brand-*` palette the rest of
-the app uses, so the two areas don't bleed into each other.
+The admin area uses the same shell and visual language as the
+student/instructor app: the shared `AppShell` (wave sidebar on desktop,
+bottom bar with a raised bubble on phones), the `brand-*` palette, and the
+same light/dark switch. Only the nav items differ per role — see
+`components/layout/navConfig.js`. `AdminUi.jsx` keeps its own exports and
+props, but each atom mirrors its counterpart in `components/ui`.
+
+On phones the bottom bar shows four tabs plus **More**. Tabs are the items
+flagged `primary` in `navConfig.js`; everything else (and theme + log out)
+lives in the More sheet, so every route stays reachable on both breakpoints.
 
 ### Backend — already robust, verified rather than rewritten
 
