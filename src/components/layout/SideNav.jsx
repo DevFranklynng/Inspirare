@@ -5,7 +5,7 @@ import { LogOut } from "lucide-react";
 // fixed in the viewport as the page scrolls.
 const ITEM_BASE =
   "relative flex shrink-0 items-center overflow-visible rounded-xl outline-none " +
-  "transition-[background-color,color,box-shadow] duration-200 " +
+  "transition-[background-color,color,box-shadow,transform] duration-300 ease-out " +
   "focus-visible:ring-2 focus-visible:ring-white/90";
 
 function ItemPopup({ children }) {
@@ -50,16 +50,22 @@ export default function SideNav({ items, onLogout }) {
                 end={end}
                 aria-label={label}
                 className={({ isActive }) =>
-                  `group/item ${ITEM_BASE} h-8 w-8 justify-center ${
+                  `group/item ${ITEM_BASE} justify-center ${
                     isActive
-                      ? "bg-white text-brand-600 shadow-[0_6px_15px_rgba(40,34,78,.18)]"
-                      : "text-white/85 hover:bg-white/15 hover:text-white"
+                      ? "z-10 h-9 w-9 -translate-y-1 scale-110 rounded-full bg-brand-600 text-brand-600 shadow-[0_8px_18px_rgba(40,34,78,.28)] ring-1 ring-inset ring-white/30"
+                      : "h-8 w-8 text-white/85 hover:bg-white/15 hover:text-white"
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.3 : 1.9} />
+                    {isActive ? (
+                      <span className="grid h-7 w-7 place-items-center rounded-full bg-white">
+                        <Icon className="h-[18px] w-[18px] text-brand-600" strokeWidth={2.1} fill="currentColor" fillOpacity={0.16} />
+                      </span>
+                    ) : (
+                      <Icon className="h-[18px] w-[18px]" strokeWidth={1.9} />
+                    )}
                     <ItemPopup>{label}</ItemPopup>
                   </>
                 )}

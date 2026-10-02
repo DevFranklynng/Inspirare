@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { fetchDashboard } from "../api/dashboard";
+import { fetchMyAttendance } from "../api/sessions";
 import { useAuth } from "../context/AuthContext";
 import { ApiError } from "../api/client";
 import LoadingState from "../components/ui/LoadingState";
@@ -29,13 +30,34 @@ export default function Dashboard() {
     setError(null);
     try {
       const result = await fetchDashboard();
-      setData(result);
+      let attendanceSummary = null;
+      const enrolledCourses = result.enrolled_courses || [];
+      if (!isInstructor && enrolledCourses.length > 0) {
+        const attendanceResults = await Promise.allSettled(
+          enrolledCourses.map((course) => fetchMyAttendance(course.course_id))
+        );
+        if (attendanceResults.every((item) => item.status === "fulfilled")) {
+          const summaries = attendanceResults.map((item) => item.value.summary);
+          const present = summaries.reduce((sum, summary) => sum + (summary.present || 0), 0);
+          const absent = summaries.reduce((sum, summary) => sum + (summary.absent || 0), 0);
+          const marked = present + absent;
+          attendanceSummary = {
+            present,
+            absent,
+            marked,
+            unmarked: summaries.reduce((sum, summary) => sum + (summary.unmarked || 0), 0),
+            is_marked: marked > 0,
+            attendance_percent: marked ? Math.round((present / marked) * 100) : 0,
+          };
+        }
+      }
+      setData({ ...result, attendance_summary: attendanceSummary });
       setStatus("success");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "We couldn't load your dashboard.");
       setStatus("error");
     }
-  }, []);
+  }, [isInstructor]);
 
   useEffect(() => {
     load();
@@ -98,8 +120,12 @@ export default function Dashboard() {
         </>
       ) : (
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:gap-4">
-          <div className="lg:col-span-7">
-            <ProgressCard courses={data.enrolled_courses} />
+          <div className="lg:col-span-12">
+            <ProgressCard
+              courses={data.enrolled_courses}
+              academicStanding={data.academic_standing}
+              attendance={data.attendance_summary}
+            />
           </div>
           <div className="lg:col-span-5"><PerformanceCard grade={data.recent_grade} /></div>
           <div className="lg:col-span-7">

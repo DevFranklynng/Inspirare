@@ -10,7 +10,7 @@ import { Loader2, AlertTriangle, Search, X } from "lucide-react";
 export function AdminPanel({ children, className = "" }) {
   return (
     <div
-      className={`rounded-[1.35rem] border border-[#efedf5] bg-white shadow-[0_3px_14px_rgba(38,31,77,0.045)] dark:border-ink-700 dark:bg-ink-900 ${className}`}
+      className={`surface-card rounded-[1.35rem] border border-[#e7e1f3] bg-white shadow-[0_5px_18px_rgba(65,51,125,0.07)] dark:border-ink-700 dark:bg-ink-900 ${className}`}
     >
       {children}
     </div>

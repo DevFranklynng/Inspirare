@@ -28,7 +28,7 @@ export default function QuickLinksCard({ isInstructor }) {
         <Link
           key={to}
           to={to}
-          className="group relative flex min-w-0 flex-col items-start justify-between rounded-[1.35rem] border border-[#efedf5] bg-white p-3.5 text-left shadow-[0_3px_14px_rgba(38,31,77,0.04)] transition-all hover:-translate-y-1 hover:shadow-card dark:border-ink-700 dark:bg-ink-900 sm:p-4"
+          className="group relative flex min-w-0 flex-col items-start justify-between rounded-[1.35rem] border border-[#e8e2f2] bg-white p-3.5 text-left shadow-[0_6px_18px_rgba(65,51,125,0.075)] transition-all hover:-translate-y-1 hover:shadow-card dark:border-ink-700 dark:bg-ink-900 sm:p-4"
         >
           <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${color}`}>
             <Icon className="h-[17px] w-[17px]" />
