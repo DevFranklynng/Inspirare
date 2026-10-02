@@ -48,8 +48,12 @@ export default function Courses() {
       {courses.length === 0 ? (
         <EmptyState
           icon={BookOpen}
-          title={isInstructor ? "No courses yet" : "No published courses yet"}
-          description={isInstructor ? "Courses assigned to you will show up here." : "Check back soon — new courses will appear here."}
+          title={isInstructor ? "No courses yet" : "You're not enrolled in any courses"}
+          description={
+            isInstructor
+              ? "Courses assigned to you will show up here."
+              : "Courses you are enrolled in appear here. Ask your administrator to enroll you."
+          }
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

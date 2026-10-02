@@ -7,6 +7,26 @@ export async function fetchCourseSessions(courseId) {
   return data.sessions;
 }
 
+/**
+ * The caller's own attendance across a whole course, not one session at a time:
+ * every session with its status, plus the totals. Read-only for the student -
+ * attendance is recorded by the instructor.
+ */
+export async function fetchMyAttendance(courseId) {
+  const data = await request(`/courses/${courseId}/attendance/me`);
+  return {
+    records: data.records || [],
+    summary: data.summary || {
+      total_sessions: 0,
+      present: 0,
+      absent: 0,
+      unmarked: 0,
+      attendance_percent: 0,
+      is_marked: false,
+    },
+  };
+}
+
 export async function createSession(courseId, { title, startsAt, endsAt, description, location }) {
   const data = await request(`/courses/${courseId}/sessions`, {
     method: "POST",

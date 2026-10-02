@@ -19,6 +19,7 @@ import ProgressManager from "../components/instructor/ProgressManager";
 import StudentAssignmentsPanel from "../components/student/StudentAssignmentsPanel";
 import StudentSchedulePanel from "../components/student/StudentSchedulePanel";
 import StudentMaterialsPanel from "../components/student/StudentMaterialsPanel";
+import StudentAttendancePanel from "../components/student/StudentAttendancePanel";
 import { Field, TextInput, TextArea } from "../components/instructor/Field";
 import {
   ArrowLeft,
@@ -29,6 +30,8 @@ import {
   FolderOpen,
   Users,
   GraduationCap,
+  CalendarCheck,
+  Lock,
   Pencil,
   X,
   Check,
@@ -48,6 +51,7 @@ const studentTabs = [
   { id: "assignments", label: "Assignments", icon: ClipboardList },
   { id: "schedule", label: "Schedule", icon: CalendarDays },
   { id: "materials", label: "Materials", icon: FolderOpen },
+  { id: "attendance", label: "Attendance", icon: CalendarCheck },
 ];
 
 export default function CourseDetail() {
@@ -59,6 +63,7 @@ export default function CourseDetail() {
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
   const [activeTab, setActiveTab] = useState("lessons");
+  const [accessDenied, setAccessDenied] = useState(false);
 
   // Which lessons the instructor has credited THIS viewer with. Read-only here
   // and always from the server: it used to live in component state and be
@@ -80,6 +85,14 @@ export default function CourseDetail() {
       setCourse(result);
       setStatus("success");
     } catch (err) {
+      // Students can only open a course they are enrolled in, so a direct link
+      // to one they are not in lands here rather than on an empty page. Give it
+      // its own state instead of a generic failure message.
+      if (err instanceof ApiError && err.status === 403) {
+        setAccessDenied(true);
+        setStatus("success");
+        return;
+      }
       setError(err instanceof ApiError ? err.message : "We couldn't load this course.");
       setStatus("error");
     }
@@ -134,6 +147,24 @@ export default function CourseDetail() {
 
   if (status === "loading") return <LoadingState label="Loading course…" />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
+
+  if (accessDenied) {
+    return (
+      <div className="flex flex-col gap-5">
+        <Link
+          to="/courses"
+          className="flex w-fit items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to courses
+        </Link>
+        <EmptyState
+          icon={Lock}
+          title="You don't have access to this course"
+          description="Courses appear once an administrator enrolls you in them."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5">
@@ -197,11 +228,6 @@ export default function CourseDetail() {
                 >
                   <Pencil className="h-3.5 w-3.5" /> Edit
                 </Button>
-              )}
-              {!isInstructor && course.is_enrolled === false && (
-                <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500 dark:bg-ink-700 dark:text-slate-300">
-                  Not enrolled — an administrator needs to enroll you
-                </span>
               )}
             </div>
           </>
@@ -272,6 +298,7 @@ export default function CourseDetail() {
           {activeTab === "assignments" && <StudentAssignmentsPanel courseId={course.id} />}
           {activeTab === "schedule" && <StudentSchedulePanel courseId={course.id} />}
           {activeTab === "materials" && <StudentMaterialsPanel courseId={course.id} />}
+          {activeTab === "attendance" && <StudentAttendancePanel courseId={course.id} />}
         </>
       )}
     </div>
