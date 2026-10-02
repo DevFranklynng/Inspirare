@@ -21,9 +21,9 @@ body {
 
 /* Shared gradient colors for the compact sidebar panel. */
 :root {
-  --nav-top: #5265e4;
-  --nav-mid: #4254cc;
-  --nav-bottom: #2f398b;
+  --nav-top: #6b56df;
+  --nav-mid: #6350d3;
+  --nav-bottom: #5543c2;
 }
 
 .bg-nav-gradient {

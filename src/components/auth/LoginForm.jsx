@@ -94,7 +94,7 @@ export default function LoginForm() {
         </p>
       )}
 
-      <Button variant="login" type="submit" isLoading={isSubmitting} loadingText="Signing in…" className="mt-2 w-full">
+      <Button type="submit" isLoading={isSubmitting} loadingText="Signing in…" className="mt-2 w-full">
         Sign In
       </Button>
 
