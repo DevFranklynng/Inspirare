@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { AuthProvider } from "./context/AuthContext";
 import { RequireAuth, RedirectIfAuthenticated } from "./components/auth/AuthGuard";
 import BlockAdminFromAppArea from "./components/auth/BlockAdminFromAppArea";
@@ -88,6 +89,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Analytics />
+        <SpeedInsights />
       </AuthProvider>
     </BrowserRouter>
   );
