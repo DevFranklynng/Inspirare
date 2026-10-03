@@ -100,7 +100,7 @@ export default function StudentClassworkPanel({ courseId }) {
     [openId]
   );
 
-  if (status === 'loading') return <LoadingState label="Loading classwork…" />;
+  if (status === 'loading') return <LoadingState label="Loading classwork…" variant="assignment" count={2} />;
   if (status === 'error') return <ErrorState message={error} onRetry={load} />;
 
   if (status === 'locked') {

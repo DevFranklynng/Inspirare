@@ -31,7 +31,7 @@ export default function Courses() {
     load();
   }, [load]);
 
-  if (status === "loading") return <LoadingState label="Loading courses…" />;
+  if (status === "loading") return <LoadingState label="Loading courses…" variant="course" count={6} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   return (

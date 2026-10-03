@@ -170,7 +170,7 @@ export default function ProgressManager({ courseId }) {
     [state.data]
   );
 
-  if (state.status === "loading") return <LoadingState label="Loading class progress…" />;
+  if (state.status === "loading") return <LoadingState label="Loading class progress…" variant="table" count={1} />;
   if (state.status === "error") return <ErrorState message={state.error} onRetry={load} />;
 
   const { lessons, students } = state.data;

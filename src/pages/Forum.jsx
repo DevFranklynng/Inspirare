@@ -74,7 +74,7 @@ function ThreadList({ isInstructor }) {
     load();
   }, [load]);
 
-  if (status === "loading") return <LoadingState label="Loading the forum…" />;
+  if (status === "loading") return <LoadingState label="Loading the forum…" variant="forum" count={4} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   async function handleCreateThread(e) {

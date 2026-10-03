@@ -12,7 +12,7 @@ export function RequireAuth() {
   if (status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <LoadingState label="Restoring your session…" />
+        <LoadingState label="Restoring your session…" variant="panel" count={1} />
       </div>
     );
   }
@@ -31,7 +31,7 @@ export function RedirectIfAuthenticated() {
   if (status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <LoadingState label="Loading…" />
+        <LoadingState label="Loading…" variant="panel" count={1} />
       </div>
     );
   }

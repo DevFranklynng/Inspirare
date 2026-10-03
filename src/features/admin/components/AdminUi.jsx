@@ -1,4 +1,5 @@
 import { Loader2, AlertTriangle, Search, X } from "lucide-react";
+import SkeletonLoadingState from "../../../components/ui/SkeletonLoadingState";
 
 // Admin UI atoms. These used to be a separate black/gold set; they now mirror
 // the student/instructor components in src/components/ui (Card, Button, Input,
@@ -80,13 +81,8 @@ export function AdminSelect({ value, onChange, children, className = "", ...prop
   );
 }
 
-export function AdminLoadingState({ label = "Loading…" }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 py-16 text-slate-400 dark:text-slate-500">
-      <Loader2 className="h-6 w-6 animate-spin text-brand-500" />
-      <p className="text-sm">{label}</p>
-    </div>
-  );
+export function AdminLoadingState({ label = "Loading…", variant = "table", count = 3 }) {
+  return <SkeletonLoadingState label={label} variant={variant} count={count} />;
 }
 
 export function AdminEmptyState({ icon: Icon, title, description, action }) {

@@ -36,7 +36,7 @@ export default function CourseScopedManager({ title, subtitle, renderManager, em
     load();
   }, [load, attempt]);
 
-  if (status === "loading") return <LoadingState label="Loading courses…" />;
+  if (status === "loading") return <LoadingState label="Loading courses…" variant="course" count={3} />;
   if (status === "error") return <ErrorState message={error} onRetry={() => setAttempt((a) => a + 1)} />;
 
   return (

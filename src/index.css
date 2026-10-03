@@ -46,6 +46,28 @@ body {
   background-image: linear-gradient(135deg, rgba(116, 94, 221, .045), transparent 58%);
   box-shadow: 0 7px 22px rgba(65, 51, 125, .09), 0 2px 4px rgba(65, 51, 125, .045);
 }
+.loading-skeleton-card { position: relative; isolation: isolate; overflow: hidden; }
+.loading-skeleton-card::after {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: -55%;
+  width: 48%;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.48), transparent);
+  animation: shell-sheen 1.8s ease-in-out infinite;
+}
+.dark .loading-skeleton-card::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,.13), transparent); }
+.loading-skeleton {
+  background: #e5e2ed;
+}
+.dark .loading-skeleton { background: #302d3e; }
+@keyframes shell-sheen { from { transform: translateX(0); } to { transform: translateX(325%); } }
+@media (prefers-reduced-motion: reduce) {
+  .loading-skeleton-card::after { animation: none; }
+}
 .academic-tile { box-shadow: 0 5px 16px rgba(65, 51, 125, .065), 0 1px 2px rgba(65, 51, 125, .035); }
 .dark .app-window { background-color: #0c0c0d; }
 .dark .app-topbar { background: #141416; }

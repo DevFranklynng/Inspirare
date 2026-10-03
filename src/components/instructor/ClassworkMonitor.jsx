@@ -145,7 +145,7 @@ export default function ClassworkMonitor({ classwork, autoStart = true }) {
     return () => clearInterval(t);
   }, []);
 
-  if (status === 'loading') return <LoadingState label="Loading the class monitor…" />;
+  if (status === 'loading') return <LoadingState label="Loading the class monitor…" variant="table" count={1} />;
   if (status === 'error') return <ErrorState message={error} onRetry={() => load()} />;
 
   const openStudent = students.find((s) => s.student_id === viewing) || null;

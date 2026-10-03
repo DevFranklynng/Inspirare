@@ -58,7 +58,7 @@ export default function Notifications() {
 
       <div className="overflow-hidden rounded-xl3 bg-white shadow-soft dark:bg-ink-900">
         {status === "loading" && notifications.length === 0 ? (
-          <LoadingState label="Loading your notifications…" />
+          <LoadingState label="Loading your notifications…" variant="notification" count={4} />
         ) : status === "error" && notifications.length === 0 ? (
           <ErrorState message={error} onRetry={() => loadNotifications({ limit: 100 })} />
         ) : (

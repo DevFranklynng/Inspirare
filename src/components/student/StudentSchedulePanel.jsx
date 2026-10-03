@@ -33,7 +33,7 @@ export default function StudentSchedulePanel({ courseId }) {
     load();
   }, [load]);
 
-  if (status === "loading") return <LoadingState label="Loading schedule…" />;
+  if (status === "loading") return <LoadingState label="Loading schedule…" variant="session" count={2} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   if (status === "locked") {

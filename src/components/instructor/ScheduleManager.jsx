@@ -245,7 +245,7 @@ export default function ScheduleManager({ courseId }) {
     }
   }
 
-  if (status === "loading") return <LoadingState label="Loading schedule…" />;
+  if (status === "loading") return <LoadingState label="Loading schedule…" variant="session" count={3} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   return (

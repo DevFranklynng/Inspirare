@@ -73,7 +73,7 @@ function StudentAssignments() {
     }
   }
 
-  if (status === "loading") return <LoadingState label="Loading assignments…" />;
+  if (status === "loading") return <LoadingState label="Loading assignments…" variant="assignment" count={4} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   return (

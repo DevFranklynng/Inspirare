@@ -65,7 +65,7 @@ export default function Dashboard() {
 
   const firstName = profile?.full_name?.split(" ")[0] || "there";
 
-  if (status === "loading") return <LoadingState label="Loading your dashboard…" />;
+  if (status === "loading") return <LoadingState label="Loading your dashboard…" variant="dashboard" />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   return (

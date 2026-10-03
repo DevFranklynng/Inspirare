@@ -82,7 +82,7 @@ export default function StudentAttendancePanel({ courseId }) {
     load();
   }, [load]);
 
-  if (state.status === "loading") return <LoadingState label="Loading your attendance…" />;
+  if (state.status === "loading") return <LoadingState label="Loading your attendance…" variant="table" count={1} />;
   if (state.status === "error") return <ErrorState message={state.error} onRetry={load} />;
 
   if (state.status === "locked") {

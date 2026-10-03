@@ -48,7 +48,7 @@ function StudentSchedule() {
     load();
   }, [load]);
 
-  if (status === "loading") return <LoadingState label="Loading your schedule…" />;
+  if (status === "loading") return <LoadingState label="Loading your schedule…" variant="session" count={3} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   if (!hasEnrolledCourse) {

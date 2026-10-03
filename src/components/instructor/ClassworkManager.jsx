@@ -185,7 +185,7 @@ export default function ClassworkManager({ courseId }) {
     [onError, load, monitorId]
   );
 
-  if (status === 'loading') return <LoadingState label="Loading classwork…" />;
+  if (status === 'loading') return <LoadingState label="Loading classwork…" variant="assignment" count={2} />;
   if (status === 'error') return <ErrorState message={error} onRetry={load} />;
 
   const monitored = tasks.find((t) => t.id === monitorId);

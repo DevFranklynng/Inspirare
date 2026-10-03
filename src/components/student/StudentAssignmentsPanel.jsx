@@ -51,7 +51,7 @@ export default function StudentAssignmentsPanel({ courseId }) {
     }
   }
 
-  if (status === "loading") return <LoadingState label="Loading assignments…" />;
+  if (status === "loading") return <LoadingState label="Loading assignments…" variant="assignment" count={2} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   if (status === "locked") {

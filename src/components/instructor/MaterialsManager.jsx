@@ -220,7 +220,7 @@ export default function MaterialsManager({ courseId }) {
     }
   }
 
-  if (status === "loading") return <LoadingState label="Loading materials…" />;
+  if (status === "loading") return <LoadingState label="Loading materials…" variant="material" count={3} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   return (

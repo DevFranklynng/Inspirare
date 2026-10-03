@@ -150,7 +150,7 @@ export default function CourseDetail() {
     }
   }
 
-  if (status === "loading") return <LoadingState label="Loading course…" />;
+  if (status === "loading") return <LoadingState label="Loading course…" variant="course-detail" count={1} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   if (accessDenied) {

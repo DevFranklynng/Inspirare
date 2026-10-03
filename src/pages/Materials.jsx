@@ -55,7 +55,7 @@ function StudentMaterials() {
     [materials, activeCourseId]
   );
 
-  if (status === "loading") return <LoadingState label="Loading your materials…" />;
+  if (status === "loading") return <LoadingState label="Loading your materials…" variant="material" count={4} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   if (!hasEnrolledCourse) {

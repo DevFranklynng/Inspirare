@@ -170,7 +170,7 @@ export default function AdminCourses() {
     }
   }
 
-  if (status === "loading") return <AdminLoadingState label="Loading courses…" />;
+  if (status === "loading") return <AdminLoadingState label="Loading courses…" variant="course" count={3} />;
   if (status === "error") return <AdminErrorState message={error} onRetry={load} />;
 
   return (

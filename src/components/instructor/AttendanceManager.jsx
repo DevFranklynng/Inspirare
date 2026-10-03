@@ -133,7 +133,7 @@ export default function AttendanceManager({ courseId }) {
     }
   }
 
-  if (status === "loading") return <LoadingState label="Loading roster…" />;
+  if (status === "loading") return <LoadingState label="Loading roster…" variant="table" count={1} />;
   if (status === "error") return <ErrorState message={error} onRetry={() => setAttempt((a) => a + 1)} />;
 
   if (students.length === 0) {

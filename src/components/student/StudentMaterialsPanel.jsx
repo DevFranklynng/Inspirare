@@ -33,7 +33,7 @@ export default function StudentMaterialsPanel({ courseId }) {
     load();
   }, [load]);
 
-  if (status === "loading") return <LoadingState label="Loading materials…" />;
+  if (status === "loading") return <LoadingState label="Loading materials…" variant="material" count={2} />;
   if (status === "error") return <ErrorState message={error} onRetry={load} />;
 
   if (status === "locked") {

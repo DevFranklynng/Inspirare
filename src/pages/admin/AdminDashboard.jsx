@@ -44,7 +44,7 @@ export default function AdminDashboard() {
     load();
   }, [load]);
 
-  if (status === "loading") return <AdminLoadingState label="Loading platform overview…" />;
+  if (status === "loading") return <AdminLoadingState label="Loading platform overview…" variant="dashboard" />;
   if (status === "error") return <AdminErrorState message={error} onRetry={load} />;
 
   const publishedCount = courses.filter((c) => c.is_published).length;
